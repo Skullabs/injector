@@ -1,0 +1,4 @@
+server:
+  health-check: { enabled: true }
+  metrics: { enabled: false }
+

@@ -1,0 +1,17 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.boilerplates
+  artifactId: java-8
+  version: 1.0.0
+
+artifactId: injector
+groupId: io.skullabs.injector
+version: 0.1.0
+
+properties:
+  version.lombok: "1.18.4"
+
+#dependencies:
+# - { groupId: ch.qos.logback, artifactId: logback-classic, version: "${versions.logback}" }
+
