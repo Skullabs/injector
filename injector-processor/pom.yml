@@ -6,12 +6,29 @@ parent:
   version: 0.1.0.Final
   relativePath: "../pom.yml"
 
-artifactId: injector-core
-groupId: io.skullabs.processor
+artifactId: injector-processor
+groupId: io.skullabs.injector
 version: 0.1.0.Final
 packaging: jar
 
 dependencies:
+ - { groupId: io.skullabs.injector, artifactId: injector-core, version: "${project.version}" }
  - { groupId: io.skullabs.apt, artifactId: class-generator, version: "${version.class-generator}" }
+ - { groupId: com.google.truth, artifactId: truth, version: 0.30, scope: test }
  - { groupId: com.google.testing.compile, artifactId: compile-testing, version: "${version.compile-testing}", scope: test }
 
+build:
+  plugins:
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-compiler-plugin
+      executions:
+        - id: default-compile
+          phase: compile
+          goals: [ "compile" ]
+          configuration:
+            annotationProcessors: [ "lombok.launch.AnnotationProcessorHider$AnnotationProcessor" ]
+        - id: default-testCompile
+          phase: test-compile
+          goals: [ "testCompile" ]
+          configuration:
+            annotationProcessors: [ "lombok.launch.AnnotationProcessorHider$AnnotationProcessor" ]

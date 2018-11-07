@@ -1,0 +1,22 @@
+package {{packageName}};
+
+import injector.Factory;
+import injector.InjectionContext;
+
+public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
+
+    @Override
+    public {{simpleName}} create(InjectionContext context) {
+        return context.instanceOf({{simpleName}}.class).{{#methods}}{{name}}(
+        {{#parameterIterable}}
+            {{^first}},{{/first}}context.instanceOf( {{data.type}}.class )
+        {{/parameterIterable}}
+    {{/methods}}
+        );
+    }
+
+    @Override
+    public Class<{{simpleName}}> getExposedType() {
+        return {{simpleName}}.class;
+    }
+}

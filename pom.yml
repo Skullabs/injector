@@ -13,7 +13,7 @@ packaging: pom
 properties:
   version.lombok: "1.18.4"
   version.compile-testing: "0.10"
-  version.class-generator: "0.1.0.Final"
+  version.class-generator: "0.2.0.Final"
 
 modules:
  - "injector-core"

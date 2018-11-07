@@ -1,0 +1,36 @@
+package {{packageName}};
+
+import injector.Factory;
+import injector.InjectionContext;
+
+public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
+
+    volatile private {{simpleName}} instance;
+
+    @Override
+    public {{simpleName}} create(InjectionContext context) {
+        if ( instance == null )
+            synchronized (this) {
+                if ( instance == null )
+                    instance = newInstance( context );
+            }
+        return instance;
+    }
+
+    @Override
+    public Class<{{simpleName}}> getExposedType() {
+        return {{simpleName}}.class;
+    }
+
+    private {{simpleName}} newInstance(InjectionContext context){
+        return new {{simpleName}}(
+{{#methods}}
+    {{#constructor}}
+        {{#parameterIterable}}{{^first}},{{/first}}
+            context.instanceOf( {{data.type}}.class )
+        {{/parameterIterable}}
+    {{/constructor}}
+{{/methods}}
+        );
+    }
+}
