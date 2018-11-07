@@ -6,10 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Ensure that only one instance of the annotated class
- * will be available for injection for a given {@link InjectionContext}.
+ * Marks a method as a factory for an specific type.
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Singleton {
+public @interface Producer {
 }

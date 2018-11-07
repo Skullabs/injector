@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Ensure that only one instance of the annotated class
- * will be available for injection for a given {@link InjectionContext}.
+ * Creates a new instance of the annotated class whenever a new
+ * object of this type is required to be injected.
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Singleton {
+public @interface New {
 }
