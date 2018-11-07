@@ -1,0 +1,15 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.injector
+  artifactId: injector-parent
+  version: 0.1.0
+  relativePath: "../pom.yml"
+
+artifactId: injector-core
+groupId: io.skullabs.injector
+version: 0.1.0
+
+#dependencies:
+# - { groupId: ch.qos.logback, artifactId: logback-classic, version: "${versions.logback}" }
+

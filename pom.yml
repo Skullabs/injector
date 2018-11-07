@@ -5,13 +5,14 @@ parent:
   artifactId: java-8
   version: 1.0.0
 
-artifactId: injector
+artifactId: injector-parent
 groupId: io.skullabs.injector
 version: 0.1.0
+packaging: pom
 
 properties:
   version.lombok: "1.18.4"
 
-#dependencies:
-# - { groupId: ch.qos.logback, artifactId: logback-classic, version: "${versions.logback}" }
+modules:
+ - "injector-core"
 
