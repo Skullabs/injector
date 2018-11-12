@@ -8,9 +8,11 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
     @Override
     public {{simpleName}} create(InjectionContext context) {
         return context.instanceOf({{simpleName}}.class).{{#methods}}{{name}}(
-        {{#parameterIterable}}
-            {{^first}},{{/first}}context.instanceOf( {{data.type}}.class )
-        {{/parameterIterable}}
+{{#parameterIterable}}
+{{^first}},{{/first}}
+{{^data.allOf}}context.instanceOf( {{data.type}}.class ){{/data.allOf}}
+{{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
+{{/parameterIterable}}
     {{/methods}}
         );
     }

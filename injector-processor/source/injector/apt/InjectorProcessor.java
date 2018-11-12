@@ -5,6 +5,7 @@ import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAbstractProcessor;
 import injector.*;
 import lombok.val;
+import lombok.var;
 
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.tools.Diagnostic;
@@ -23,14 +24,23 @@ import java.util.*;
 public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     static final String EOL = "\n";
-    static final String FACTORY_LOCATION = "META-INF/services/" + Factory.class.getCanonicalName();
+    static final String SPI_LOCATION = "META-INF/services/";
+    static final String FACTORY = Factory.class.getCanonicalName();
+    static final String FACTORY_LOCATION = SPI_LOCATION + Factory.class.getCanonicalName();
+
+    static final String LOADER = ExposedServicesLoader.class.getCanonicalName();
+    static final String LOADER_LOCATION = "META-INF/loader/";
 
     final ClassGenerator nonSingletonFactory = ClassGenerator.with( "non-singleton-class-factory.mustache" );
     final ClassGenerator singletonFactory = ClassGenerator.with( "singleton-class-factory.mustache" );
     final ClassGenerator producerClassFactory = ClassGenerator.with( "producer-class-factory.mustache" );
+    final ClassGenerator exposedServiceLoader = ClassGenerator.with( "exposed-service-loader.mustache" );
+
 
     final JavaFileManager.Location outputLocation;
-    List<String> exposedServices;
+
+    Map<String, List<String>> spiClasses;
+    Map<String, List<String>> loaderClasses;
 
     public InjectorProcessor(){
         this( StandardLocation.CLASS_OUTPUT );
@@ -48,20 +58,25 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     @Override
     protected void process(Collection<SimplifiedAST.Type> types) {
         try {
-            exposedServices = new ArrayList<>();
-            generateFactories(types);
+            info( "Running Dependency Injection Optimization..." );
+            spiClasses = new HashMap<>();
+            loaderClasses = new HashMap<>();
+            generateClasses(types);
             generateSPIFiles();
+            memorizeLoaders();
+            info( "Done!" );
         } catch ( Exception cause ){
             error( cause.getMessage() );
             cause.printStackTrace();
         }
     }
 
-    private void generateFactories(Collection<SimplifiedAST.Type> types) throws IOException {
+    private void generateClasses(Collection<SimplifiedAST.Type> types) throws IOException {
         for (SimplifiedAST.Type type : types) {
             val injectorTypes = splitInjectorTypes(type);
             generateRegularFactory(injectorTypes.getRegular());
             generateProducers(injectorTypes.getProducers());
+            generateExposedService(injectorTypes.getRegular());
         }
     }
 
@@ -70,7 +85,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         val listOfProducers = new ArrayList<InjectorType>();
 
         for (val method : type.getMethods()) {
-            val injectorMethod = createInjectorMethod( method );
+            val injectorMethod = InjectorMethod.from( method );
             if ( injectorMethod.isProducer() )
                 listOfProducers.add( createTypeWithSingleMethod( type, injectorMethod ) );
             else
@@ -78,15 +93,6 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         }
 
         return new InjectorTypes( regular, listOfProducers );
-    }
-
-    private InjectorMethod createInjectorMethod(SimplifiedAST.Method method) {
-        return (InjectorMethod)new InjectorMethod()
-                .setParameters( method.getParameters() )
-                .setConstructor( method.isConstructor() )
-                .setAnnotations( method.getAnnotations() )
-                .setName( method.getName() )
-                .setType( method.getType() );
     }
 
     private InjectorType createTypeWithSingleMethod( SimplifiedAST.Type type, SimplifiedAST.Method method ) {
@@ -120,27 +126,64 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     }
 
     private void generateFactory( ClassGenerator generator, InjectorType factory ) throws IOException {
-        if ( exposedServices.contains( factory.getCanonicalName() ) )
+        val className = factory.getCanonicalName() + "Factory";
+        if ( getSpiClassesForFactory().contains( className ) )
             return;
 
         val filer = processingEnv.getFiler();
-        val source = filer.createSourceFile( factory.getCanonicalName() + "Factory" );
-        info( "Generating " + factory.getCanonicalName() + "Factory (singleton=" + factory.isSingleton() + ")" );
+        val source = filer.createSourceFile( className );
+        info( "  + " + factory.getCanonicalName() + "Factory (singleton=" + factory.isSingleton() + ")" );
         try ( val writer = source.openWriter() ) {
             generator.write( writer, factory );
-            exposedServices.add( factory.getCanonicalName() );
+            getSpiClassesForFactory().add( className );
         }
     }
 
     private void generateSPIFiles() throws IOException {
-        info( "Running dependency injection optimization..." );
-        final Set<String> implementations = readResourceIfExists(FACTORY_LOCATION);
-        implementations.addAll( this.exposedServices);
-        try ( final Writer resource = createResource( FACTORY_LOCATION ) ) {
-            for (final String implementation : implementations)
-                resource.write(implementation + "Factory" + EOL);
+        for ( val entry : this.spiClasses.entrySet()) {
+            val location = SPI_LOCATION + entry.getKey();
+            val implementations = readResourceIfExists( location );
+            implementations.addAll( entry.getValue() );
+            try ( final Writer resource = createResource( location ) ) {
+                for (final String implementation : implementations)
+                    resource.write(implementation + EOL);
+            }
         }
-        info( "Done!" );
+    }
+
+    private List<String> getSpiClassesForFactory(){
+        return spiClasses.computeIfAbsent( FACTORY, k -> new ArrayList<>() );
+    }
+
+    private void generateExposedService(InjectorType type) throws IOException {
+        var exposedAs = type.getExposedClass();
+        if ( exposedAs != null ) {
+            exposedAs = exposedAs.replaceFirst(".class$", "");
+
+            val className = type.getCanonicalName() + "ExposedServicesLoader";
+            info( "  + " + className + " (getExposedClass=" + exposedAs + ")" );
+
+            val filer = processingEnv.getFiler();
+            val source = filer.createSourceFile( className );
+
+            try ( val writer = source.openWriter() ) {
+                exposedServiceLoader.write(writer, type);
+                loaderClasses.computeIfAbsent( exposedAs, t -> new ArrayList<>() ).add( className );
+                spiClasses.computeIfAbsent( LOADER, t -> new ArrayList<>() ).add( type.getCanonicalName() );
+            }
+        }
+    }
+
+    private void memorizeLoaders() throws IOException {
+        for ( val entry : loaderClasses.entrySet()) {
+            val location = LOADER_LOCATION + entry.getKey();
+            val implementations = readResourceIfExists( location );
+            implementations.addAll( entry.getValue() );
+            try ( final Writer resource = createResource( location ) ) {
+                for (final String implementation : implementations)
+                    resource.write(implementation + EOL);
+            }
+        }
     }
 
     private Set<String> readResourceIfExists(final String resourcePath) throws IOException {

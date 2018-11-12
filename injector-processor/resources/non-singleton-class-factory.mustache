@@ -10,9 +10,11 @@ public class {{simpleName}}Factory implements Factory<{{canonicalName}}> {
     return new {{simpleName}}(
     {{#methods}}
         {{#constructor}}
-            {{#parameterIterable}}
-                {{^first}},{{/first}}context.instanceOf( {{data.type}}.class )
-            {{/parameterIterable}}
+{{#parameterIterable}}
+{{^first}},{{/first}}
+{{^data.allOf}}context.instanceOf( {{data.type}}.class ){{/data.allOf}}
+{{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
+{{/parameterIterable}}
         {{/constructor}}
     {{/methods}}
     );

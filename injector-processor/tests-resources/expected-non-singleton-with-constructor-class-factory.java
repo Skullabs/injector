@@ -8,8 +8,12 @@ public class NonSingletonWithConstructorFactory implements Factory<injector.apt.
     @Override
     public NonSingletonWithConstructor create(InjectionContext context) {
     return new NonSingletonWithConstructor(
-                context.instanceOf( injector.apt.NonSingletonService.class )
-                ,context.instanceOf( injector.apt.SingletonService.class )
+
+context.instanceOf( injector.apt.NonSingletonService.class )
+
+,
+context.instanceOf( injector.apt.SingletonService.class )
+
     );
     }
 

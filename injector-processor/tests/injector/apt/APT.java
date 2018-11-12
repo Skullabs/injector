@@ -37,6 +37,10 @@ public class APT {
         return config;
     }
 
+    public SimplifiedAPTRunner.LocalJavaSource asSource(File file ) {
+        return new SimplifiedAPTRunner.LocalJavaSource( file );
+    }
+
     public File testFile(Class clazz ) {
         val path = clazz.getCanonicalName().replace('.', '/');
         return new File("tests/" + path + ".java");

@@ -1,12 +1,12 @@
 package injector.apt;
 
 import generator.apt.SimplifiedAST;
-import injector.New;
-import injector.Producer;
-import injector.Singleton;
+import injector.*;
+import lombok.ToString;
 import lombok.Value;
 import lombok.val;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,12 +18,21 @@ class InjectorTypes {
 
 class InjectorType extends SimplifiedAST.Type {
 
+    List<SimplifiedAST.Method> fixedMethods;
+
     public boolean isSingleton(){
         return getAnnotation(Singleton.class) != null;
     }
 
     public boolean isNew(){
         return getAnnotation(New.class) != null;
+    }
+
+    public String getExposedClass(){
+        val exposedAs = getAnnotation(ExposedAs.class);
+        if ( exposedAs != null )
+            return exposedAs.getValue().toString();
+        return null;
     }
 
     @Override
@@ -37,5 +46,38 @@ class InjectorMethod extends SimplifiedAST.Method {
 
     public boolean isProducer(){
         return getAnnotation(Producer.class) != null;
+    }
+
+    static InjectorMethod from(SimplifiedAST.Method element) {
+        return (InjectorMethod) new InjectorMethod()
+                .setParameters( InjectorParameter.from(element.getParameters()) )
+                .setConstructor(element.isConstructor())
+                .setAnnotations( element.getAnnotations() )
+                .setType( element.getType() )
+                .setName( element.getName() );
+    }
+}
+
+@ToString(callSuper = true)
+class InjectorParameter extends SimplifiedAST.Element {
+
+    public String getAllOf(){
+        val allOf = getAnnotation(AllOf.class);
+        if ( allOf != null )
+            return allOf.getValue().toString();
+        return null;
+    }
+
+    static SimplifiedAST.Element from(SimplifiedAST.Element element) {
+        return new InjectorParameter()
+            .setAnnotations( element.getAnnotations() )
+            .setType( element.getType() )
+            .setName( element.getName() );
+    }
+
+    static List<SimplifiedAST.Element> from( List<SimplifiedAST.Element> parameters ) {
+        val newParams = new ArrayList<SimplifiedAST.Element>();
+        parameters.forEach( p -> newParams.add( from(p) ) );
+        return newParams;
     }
 }

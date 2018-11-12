@@ -1,0 +1,11 @@
+package {{packageName}};
+
+import injector.DefaultExposedServicesLoader;
+
+public class {{simpleName}}ExposedServicesLoader extends DefaultExposedServicesLoader<{{canonicalName}}> {
+
+    @Override
+    public Class<{{simpleName}}> getExposedType() {
+        return {{simpleName}}.class;
+    }
+}

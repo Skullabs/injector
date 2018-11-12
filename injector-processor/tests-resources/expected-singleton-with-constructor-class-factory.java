@@ -25,9 +25,11 @@ public class SingletonWithConstructorFactory implements Factory<SingletonWithCon
     private SingletonWithConstructor newInstance(InjectionContext context){
         return new SingletonWithConstructor(
 
-            context.instanceOf( injector.apt.NonSingletonService.class )
+context.instanceOf( injector.apt.NonSingletonService.class )
+
 ,
-            context.instanceOf( injector.apt.NonSingletonWithConstructor.class )
+context.instanceOf( injector.apt.NonSingletonWithConstructor.class )
+
         );
     }
 }
