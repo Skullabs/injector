@@ -3,6 +3,7 @@ package injector;
 import lombok.Setter;
 import lombok.val;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -12,6 +13,7 @@ import java.util.function.Consumer;
 public class InjectionContext {
 
     final Map<Class, Factory> cache = new HashMap<>();
+    final Map<Class, Iterable> exposed = new HashMap<>();
 
     @Setter Consumer<String> logger = new StdOutErrorPrinter();
 
@@ -19,6 +21,11 @@ public class InjectionContext {
         val factories = ServiceLoader.load( Factory.class );
         for ( val factory : factories )
             registerFactoryOf(factory.getExposedType(), factory);
+
+        val loaders = ServiceLoader.load( ExposedServicesLoader.class );
+        for ( val loader : loaders ) {
+            exposed.put( loader.getExposedType(), loader.load(this) );
+        }
     }
 
     public <T> Factory<T> factoryOf(Class<T> clazz ) {
@@ -39,6 +46,13 @@ public class InjectionContext {
             logger.accept(
                 "More than one Factory defined for " + type.getCanonicalName() + ". " + String.join( ",",
                         oldValue.getClass().getCanonicalName(), factory.getClass().getCanonicalName() ) );
+    }
+
+    public <T> Iterable<T> instancesExposedAs(Class<T> clazz) {
+        val ts = exposed.get( clazz );
+        if ( ts != null )
+            return ts;
+        return Collections.emptyList();
     }
 
     private class StdOutErrorPrinter implements Consumer<String> {

@@ -1,6 +1,9 @@
 package injector;
 
 import injector.generated.SingletonService;
+import injector.generated.exposed.MathOperation;
+import injector.generated.exposed.Minus;
+import injector.generated.exposed.Sum;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,4 +34,12 @@ class InjectionContextTest {
         assertSame( instance, context.instanceOf( SingletonService.class ) );
     }
 
+    @DisplayName("Is able to load all implementations of a given type")
+    @Test void instancesExposedAs(){
+        val instances = context.instancesExposedAs(MathOperation.class);
+        val iterator = instances.iterator();
+        assertTrue( iterator.hasNext() );
+        assertTrue( iterator.next() instanceof Sum);
+        assertTrue( iterator.next() instanceof Minus);
+    }
 }

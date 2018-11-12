@@ -1,2 +1,4 @@
 injector.generated.NonSingletonServiceFactory
 injector.generated.SingletonServiceFactory
+injector.generated.exposed.MinusFactory
+injector.generated.exposed.SumFactory
