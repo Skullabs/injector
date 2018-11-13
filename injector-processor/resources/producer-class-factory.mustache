@@ -7,7 +7,7 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
 
     @Override
     public {{simpleName}} create(InjectionContext context) {
-        return context.instanceOf({{simpleName}}.class).{{#methods}}{{name}}(
+        return context.instanceOf({{type}}.class).{{#methods}}{{name}}(
 {{#parameterIterable}}
 {{^first}},{{/first}}
 {{^data.allOf}}context.instanceOf( {{data.type}}.class ){{/data.allOf}}

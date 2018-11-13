@@ -7,7 +7,7 @@ public class ImportantServiceFactory implements Factory<ImportantService> {
 
     @Override
     public ImportantService create(InjectionContext context) {
-        return context.instanceOf(ImportantService.class).produceImportantService(
+        return context.instanceOf(injector.apt.ProducerOfImportantServices.class).produceImportantService(
 
 context.instanceOf( injector.apt.NonSingletonWithConstructor.class )
 
