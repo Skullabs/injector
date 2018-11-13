@@ -7,7 +7,7 @@ parent:
 
 artifactId: injector-parent
 groupId: io.skullabs.injector
-version: 0.1.0.Final
+version: 0.2.0.Final
 packaging: pom
 
 properties:
