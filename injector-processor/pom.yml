@@ -8,7 +8,7 @@ parent:
 
 artifactId: injector-processor
 groupId: io.skullabs.injector
-version: 0.2.0.Final
+version: 0.3.0.Final
 packaging: jar
 
 dependencies:
