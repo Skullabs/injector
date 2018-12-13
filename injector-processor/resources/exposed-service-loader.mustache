@@ -1,11 +1,32 @@
 package {{packageName}};
 
-import injector.DefaultExposedServicesLoader;
+import java.util.*;
+import injector.*;
 
-public class {{simpleName}}ExposedServicesLoader extends DefaultExposedServicesLoader<{{canonicalName}}> {
+public class {{simpleName}}ExposedServicesLoader extends DefaultExposedServicesLoader<{{simpleName}}> {
+
+    private final static List<Class> exposedClasses = readAllClassNames( {{simpleName}}.class );
+
+    private Iterable<{{simpleName}}> loadedServices;
+
+    @Override
+    public Iterable<{{simpleName}}> load(InjectionContext context) {
+        if ( loadedServices == null )
+            try {
+                loadedServices = loadAllImplementations(context);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        return loadedServices;
+    }
 
     @Override
     public Class<{{simpleName}}> getExposedType() {
         return {{simpleName}}.class;
+    }
+
+    @Override
+    public List<Class> getExposedClasses() {
+        return exposedClasses;
     }
 }

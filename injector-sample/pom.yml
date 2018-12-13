@@ -1,0 +1,35 @@
+modelVersion: 4.0.0
+
+parent:
+  groupId: io.skullabs.boilerplates
+  artifactId: java-8
+  version: 1.0.0
+
+artifactId: injector-sample
+groupId: io.skullabs.injector
+version: 0.2.0.Final
+packaging: jar
+
+properties:
+  version.lombok: "1.18.4"
+
+dependencies:
+ - { groupId: io.skullabs.injector, artifactId: injector-core, version: "0.2.0.Final" }
+ - { groupId: io.skullabs.injector, artifactId: injector-processor, version: "0.2.0.Final", scope: provided }
+
+build:
+  plugins:
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-shade-plugin
+    version: 3.2.0
+    executions:
+    - { phase: package, goals: [ "shade" ] }
+    configuration:
+      createDependencyReducedPom: true
+      dependencyReducedPomLocation: "${basedir}/output/pom-reduced.xml"
+      minimizeJar: true
+      transformers:
+        org.apache.maven.plugins.shade.resource.ManifestResourceTransformer:
+          manifestEntries:
+            Main-Class: injector.sample.Main
+

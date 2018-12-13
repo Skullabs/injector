@@ -18,4 +18,5 @@ properties:
 modules:
  - "injector-core"
  - "injector-processor"
+ - "injector-sample"
 

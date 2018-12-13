@@ -64,7 +64,11 @@ class InjectorProcessorTest {
     @SneakyThrows
     @DisplayName("Can generate factories from producer methods")
     @Test void process5() {
-        val result = APT.runner().run(injector, APT.asSource( APT.testFile(ProducerOfImportantServices.class) ));
+        val result = APT.runner().run(injector,
+                APT.asSource( APT.testFile(ProducerOfImportantServices.class) ),
+                APT.asSource( APT.testFile(ImportantService.class) ),
+                APT.asSource( APT.testFile(SecondImportantService.class) ));
+
         result.printErrorsIfAny();
 
         val nonSingleton = APT.outputGeneratedClass( ImportantService.class.getCanonicalName() + "Factory" );
@@ -76,10 +80,12 @@ class InjectorProcessorTest {
     @SneakyThrows
     @DisplayName("Can generate exposed service loader")
     @Test void process6() {
-        val result = APT.runner().run(injector, APT.asSource( APT.testFile(Sum.class) ));
+        val result = APT.runner().run(injector,
+                APT.asSource( APT.testFile(Sum.class) ),
+                APT.asSource( APT.testFile(Minus.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( Sum.class.getCanonicalName() + "ExposedServicesLoader" );
+        val nonSingleton = APT.outputGeneratedClass( MathOperation.class.getCanonicalName() + "ExposedServicesLoader" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-exposed-service-loader.java" );
         assertEquals( expectedContent, nonSingletonAsString );

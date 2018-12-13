@@ -26,10 +26,9 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     static final String EOL = "\n";
     static final String SPI_LOCATION = "META-INF/services/";
     static final String FACTORY = Factory.class.getCanonicalName();
-    static final String FACTORY_LOCATION = SPI_LOCATION + Factory.class.getCanonicalName();
 
     static final String LOADER = ExposedServicesLoader.class.getCanonicalName();
-    static final String LOADER_LOCATION = "META-INF/loader/";
+    //static final String LOADER_LOCATION = "META-INF/loader/";
 
     final ClassGenerator nonSingletonFactory = ClassGenerator.with( "non-singleton-class-factory.mustache" );
     final ClassGenerator singletonFactory = ClassGenerator.with( "singleton-class-factory.mustache" );
@@ -41,6 +40,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     Map<String, List<String>> spiClasses;
     Map<String, List<String>> loaderClasses;
+    Map<String, Object> exposedClasses;
 
     public InjectorProcessor(){
         this( StandardLocation.CLASS_OUTPUT );
@@ -59,16 +59,22 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     protected void process(Collection<SimplifiedAST.Type> types) {
         try {
             info( "Running Dependency Injection Optimization..." );
-            spiClasses = new HashMap<>();
-            loaderClasses = new HashMap<>();
+            initializeClassCaches();
             generateClasses(types);
             generateSPIFiles();
             memorizeLoaders();
             info( "Done!" );
         } catch ( Exception cause ){
-            error( cause.getMessage() );
+            val msg = cause.getMessage() != null ? cause.getMessage() : "NullPointerException";
+            error( msg );
             cause.printStackTrace();
         }
+    }
+
+    private void initializeClassCaches() {
+        spiClasses = new HashMap<>();
+        loaderClasses = new HashMap<>();
+        exposedClasses = new HashMap<>();
     }
 
     private void generateClasses(Collection<SimplifiedAST.Type> types) throws IOException {
@@ -82,7 +88,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     private InjectorTypes splitInjectorTypes(SimplifiedAST.Type type) {
         val regular = createNewType(type);
-        val listOfProducers = new ArrayList<InjectorType>();
+        val listOfProducers = new HashSet<InjectorType>();
 
         for (val method : type.getMethods()) {
             val injectorMethod = InjectorMethod.from( method );
@@ -119,7 +125,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         generateFactory( generator, type );
     }
 
-    private void generateProducers(List<InjectorType> producers) throws IOException {
+    private void generateProducers(Collection<InjectorType> producers) throws IOException {
         for (val producer : producers) {
             generateFactory( producerClassFactory, producer );
         }
@@ -156,27 +162,30 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     }
 
     private void generateExposedService(InjectorType type) throws IOException {
-        var exposedAs = type.getExposedClass();
+        val exposedAs = type.getExposedClass();
+        val canonicalName = type.getCanonicalName();
         if ( exposedAs != null ) {
-            exposedAs = exposedAs.replaceFirst(".class$", "");
+            val className = exposedAs + "ExposedServicesLoader";
+            info( "  + " + canonicalName + " (exposedClass=" + exposedAs + ")" );
 
-            val className = type.getCanonicalName() + "ExposedServicesLoader";
-            info( "  + " + className + " (getExposedClass=" + exposedAs + ")" );
-
-            val filer = processingEnv.getFiler();
-            val source = filer.createSourceFile( className );
-
-            try ( val writer = source.openWriter() ) {
-                exposedServiceLoader.write(writer, type);
-                loaderClasses.computeIfAbsent( exposedAs, t -> new ArrayList<>() ).add( className );
-                spiClasses.computeIfAbsent( LOADER, t -> new ArrayList<>() ).add( type.getCanonicalName() );
+            if ( !exposedClasses.containsKey( exposedAs ) ) {
+                val filer = processingEnv.getFiler();
+                val source = filer.createSourceFile(className);
+                try (val writer = source.openWriter()) {
+                    type.setCanonicalName(exposedAs);
+                    exposedServiceLoader.write(writer, type);
+                    exposedClasses.put(exposedAs, type);
+                }
             }
+
+            loaderClasses.computeIfAbsent( exposedAs, t -> new ArrayList<>() ).add( canonicalName );
+            spiClasses.computeIfAbsent( LOADER, t -> new ArrayList<>() ).add( className );
         }
     }
 
     private void memorizeLoaders() throws IOException {
         for ( val entry : loaderClasses.entrySet()) {
-            val location = LOADER_LOCATION + entry.getKey();
+            val location = SPI_LOCATION + entry.getKey();
             val implementations = readResourceIfExists( location );
             implementations.addAll( entry.getValue() );
             try ( final Writer resource = createResource( location ) ) {

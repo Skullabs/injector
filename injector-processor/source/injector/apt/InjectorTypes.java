@@ -2,23 +2,27 @@ package injector.apt;
 
 import generator.apt.SimplifiedAST;
 import injector.*;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
 import lombok.val;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Value
 class InjectorTypes {
     InjectorType regular;
-    List<InjectorType> producers;
+    Set<InjectorType> producers;
 }
 
+@EqualsAndHashCode(callSuper = true)
 class InjectorType extends SimplifiedAST.Type {
 
     List<SimplifiedAST.Method> fixedMethods;
+    String exposedClass;
 
     public boolean isSingleton(){
         return getAnnotation(Singleton.class) != null;
@@ -29,10 +33,13 @@ class InjectorType extends SimplifiedAST.Type {
     }
 
     public String getExposedClass(){
-        val exposedAs = getAnnotation(ExposedAs.class);
-        if ( exposedAs != null )
-            return exposedAs.getValue().toString();
-        return null;
+        if ( exposedClass == null ) {
+            val exposedAs = getAnnotation(ExposedAs.class);
+            if (exposedAs != null)
+                exposedClass = exposedAs.getValue().toString()
+                    .replaceAll(".class$", "");
+        }
+        return exposedClass;
     }
 
     @Override
