@@ -6,8 +6,10 @@ public class ImportantServiceInjectorFactory implements Factory<ImportantService
 
     public ImportantService create(Injector context, Class targetClass) {
         return context.instanceOf(injector.apt.ProducerOfImportantServices.class, targetClass).produceImportantService(
-        targetClass
+
+targetClass
 ,
+
 context.instanceOf( injector.apt.NonSingletonWithConstructor.class, getExposedType() )
 
 

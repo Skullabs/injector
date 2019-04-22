@@ -7,7 +7,7 @@ import injector.Singleton;
 public class ProducerOfImportantServices {
 
     @Producer
-    ImportantService produceImportantService( NonSingletonWithConstructor nonSingletonWithConstructor ){
+    ImportantService produceImportantService( Class targetClass, NonSingletonWithConstructor nonSingletonWithConstructor ){
         return new ImportantService( nonSingletonWithConstructor.nonSingletonService );
     }
 

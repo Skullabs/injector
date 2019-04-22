@@ -6,9 +6,10 @@ public class {{simpleName}}InjectorFactory implements Factory<{{simpleName}}> {
 
     public {{simpleName}} create(Injector context, Class targetClass) {
         return context.instanceOf({{type}}.class, targetClass).{{#methods}}{{name}}(
-        targetClass
 {{#parameterIterable}}
-{{^data.targetClass}},
+{{^first}},{{/first}}
+{{#data.targetClass}}targetClass{{/data.targetClass}}
+{{^data.targetClass}}
 {{^data.allOf}}context.instanceOf( {{data.type}}.class, getExposedType() ){{/data.allOf}}
 {{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
 {{/data.targetClass}}
