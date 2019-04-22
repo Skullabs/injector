@@ -1,9 +1,7 @@
 package injector;
 
 import injector.generated.SingletonService;
-import injector.generated.exposed.MathOperation;
-import injector.generated.exposed.Minus;
-import injector.generated.exposed.Sum;
+import injector.generated.exposed.*;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +30,13 @@ class InjectionContextTest {
         val instance = context.instanceOf( SingletonService.class );
         assertNotNull( instance );
         assertSame( instance, context.instanceOf( SingletonService.class ) );
+    }
+
+    @DisplayName("A Singleton should be able to inject of implementation of a given type")
+    @Test void instanceOf2(){
+        val instance = context.instanceOf( ServiceWhichRequiresAllMathOperations.class );
+        assertEquals(0, instance.getTotal(),
+        "Calculated total using all injected dependencies failed" );
     }
 
     @DisplayName("Is able to load all implementations of a given type")

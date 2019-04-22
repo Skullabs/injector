@@ -2,7 +2,6 @@ package injector.apt.exposed;
 
 import injector.AllOf;
 import injector.New;
-import injector.Singleton;
 
 @New
 public class CalculatorNonSingleton {

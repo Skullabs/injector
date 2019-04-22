@@ -5,7 +5,6 @@ import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAbstractProcessor;
 import injector.*;
 import lombok.val;
-import lombok.var;
 
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.tools.Diagnostic;
@@ -20,7 +19,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.*;
 
-@SupportedAnnotationTypes( { "javax.inject.*", "injector.*" } )
+@SupportedAnnotationTypes( { "injector.*" } )
 public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     static final String EOL = "\n";
@@ -28,13 +27,11 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     static final String FACTORY = Factory.class.getCanonicalName();
 
     static final String LOADER = ExposedServicesLoader.class.getCanonicalName();
-    //static final String LOADER_LOCATION = "META-INF/loader/";
 
     final ClassGenerator nonSingletonFactory = ClassGenerator.with( "non-singleton-class-factory.mustache" );
     final ClassGenerator singletonFactory = ClassGenerator.with( "singleton-class-factory.mustache" );
     final ClassGenerator producerClassFactory = ClassGenerator.with( "producer-class-factory.mustache" );
     final ClassGenerator exposedServiceLoader = ClassGenerator.with( "exposed-service-loader.mustache" );
-
 
     final JavaFileManager.Location outputLocation;
 

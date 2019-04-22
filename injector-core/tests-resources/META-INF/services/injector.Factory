@@ -2,3 +2,4 @@ injector.generated.NonSingletonServiceFactory
 injector.generated.SingletonServiceFactory
 injector.generated.exposed.MinusFactory
 injector.generated.exposed.SumFactory
+injector.generated.exposed.ServiceWhichRequiresAllMathOperationsFactory

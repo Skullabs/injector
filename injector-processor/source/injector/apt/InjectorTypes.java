@@ -25,7 +25,7 @@ class InjectorType extends SimplifiedAST.Type {
     String exposedClass;
 
     public boolean isSingleton(){
-        return getAnnotation(Singleton.class) != null;
+        return !isNew();
     }
 
     public boolean isNew(){

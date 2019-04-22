@@ -1,19 +1,18 @@
 package injector.generated.exposed;
 
-import injector.AllOf;
-import injector.Singleton;
+import lombok.*;
 
-@Singleton
+@Getter
 public class ServiceWhichRequiresAllMathOperations {
 
-    int total;
+    int total = -2;
 
     public ServiceWhichRequiresAllMathOperations(
-            @AllOf( MathOperation.class ) Iterable<MathOperation> mathOperations
+        Iterable<MathOperation> mathOperations
     ) {
-        total = 0;
         for (MathOperation operation : mathOperations) {
             total = operation.apply( total, 1 );
         }
+        total+= 2;
     }
 }
