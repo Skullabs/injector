@@ -2,11 +2,10 @@ package injector.apt;
 
 import injector.*;
 
-public class SingletonServiceFactory implements Factory<SingletonService> {
+public class SingletonServiceInjectorFactory implements Factory<SingletonService> {
 
     volatile private SingletonService instance;
 
-    @Override
     public SingletonService create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
@@ -16,7 +15,6 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
         return instance;
     }
 
-    @Override
     public Class<SingletonService> getExposedType() {
         return SingletonService.class;
     }

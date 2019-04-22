@@ -2,11 +2,10 @@ package injector.apt.exposed;
 
 import injector.*;
 
-public class CalculatorFactory implements Factory<Calculator> {
+public class CalculatorInjectorFactory implements Factory<Calculator> {
 
     volatile private Calculator instance;
 
-    @Override
     public Calculator create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
@@ -16,7 +15,6 @@ public class CalculatorFactory implements Factory<Calculator> {
         return instance;
     }
 
-    @Override
     public Class<Calculator> getExposedType() {
         return Calculator.class;
     }

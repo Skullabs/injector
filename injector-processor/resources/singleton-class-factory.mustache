@@ -2,11 +2,10 @@ package {{packageName}};
 
 import injector.*;
 
-public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
+public class {{simpleName}}InjectorFactory implements Factory<{{simpleName}}> {
 
     volatile private {{simpleName}} instance;
 
-    @Override
     public {{simpleName}} create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
@@ -16,7 +15,6 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
         return instance;
     }
 
-    @Override
     public Class<{{simpleName}}> getExposedType() {
         return {{simpleName}}.class;
     }

@@ -2,9 +2,8 @@ package {{packageName}};
 
 import injector.*;
 
-public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
+public class {{simpleName}}InjectorFactory implements Factory<{{simpleName}}> {
 
-    @Override
     public {{simpleName}} create(Injector context, Class targetClass) {
         return context.instanceOf({{type}}.class, targetClass).{{#methods}}{{name}}(
         targetClass
@@ -18,7 +17,6 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
         );
     }
 
-    @Override
     public Class<{{simpleName}}> getExposedType() {
         return {{simpleName}}.class;
     }

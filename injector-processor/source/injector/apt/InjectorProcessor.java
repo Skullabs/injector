@@ -129,13 +129,13 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     }
 
     private void generateFactory( ClassGenerator generator, InjectorType factory ) throws IOException {
-        val className = factory.getCanonicalName() + "Factory";
+        val className = factory.getCanonicalName() + "InjectorFactory";
         if ( getSpiClassesForFactory().contains( className ) )
             return;
 
         val filer = processingEnv.getFiler();
         val source = filer.createSourceFile( className );
-        info( "  + " + factory.getCanonicalName() + "Factory (singleton=" + factory.isSingleton() + ")" );
+        info( "  + " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")" );
         try ( val writer = source.openWriter() ) {
             generator.write( writer, factory );
             getSpiClassesForFactory().add( className );

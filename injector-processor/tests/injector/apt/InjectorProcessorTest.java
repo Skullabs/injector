@@ -19,7 +19,7 @@ class InjectorProcessorTest {
         val result = APT.runner().run(injector, APT.asSource( APT.testFile(NonSingletonService.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( NonSingletonService.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( NonSingletonService.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-non-singleton-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -31,7 +31,7 @@ class InjectorProcessorTest {
         val result = APT.runner().run(injector, APT.asSource( APT.testFile(NonSingletonWithConstructor.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( NonSingletonWithConstructor.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( NonSingletonWithConstructor.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-non-singleton-with-constructor-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -43,7 +43,7 @@ class InjectorProcessorTest {
         val result = APT.runner().run(injector, APT.asSource( APT.testFile(SingletonService.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( SingletonService.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( SingletonService.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-singleton-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -55,7 +55,7 @@ class InjectorProcessorTest {
         val result = APT.runner().run(injector, APT.asSource( APT.testFile(SingletonWithConstructor.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( SingletonWithConstructor.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( SingletonWithConstructor.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-singleton-with-constructor-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -71,7 +71,7 @@ class InjectorProcessorTest {
 
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( ImportantService.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( ImportantService.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-producer-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -103,7 +103,7 @@ class InjectorProcessorTest {
                 APT.asSource( APT.testFile(CalculatorNonManagerProducer.class) ));
         result.printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( Calculator.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( Calculator.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-factory-with-exposed-objects-injected.java" );
         assertEquals( expectedContent, nonSingletonAsString );
@@ -126,7 +126,7 @@ class InjectorProcessorTest {
             APT.asSource( APT.testFile(CalculatorNonManagerProducer.class) ))
                 .printErrorsIfAny();
 
-        val nonSingleton = APT.outputGeneratedClass( SingletonWithConstructor.class.getCanonicalName() + "Factory" );
+        val nonSingleton = APT.outputGeneratedClass( SingletonWithConstructor.class.getCanonicalName() + "InjectorFactory" );
         val nonSingletonAsString = APT.readFileAsString(nonSingleton);
         val expectedContent = APT.testResourceAsString( "expected-singleton-with-constructor-class-factory.java" );
         assertEquals( expectedContent, nonSingletonAsString );

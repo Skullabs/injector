@@ -2,9 +2,8 @@ package injector.apt;
 
 import injector.*;
 
-public class NonSingletonWithConstructorFactory implements Factory<injector.apt.NonSingletonWithConstructor> {
+public class NonSingletonWithConstructorInjectorFactory implements Factory<injector.apt.NonSingletonWithConstructor> {
 
-    @Override
     public NonSingletonWithConstructor create(Injector context, Class targetClass) {
     return new NonSingletonWithConstructor(
 
@@ -16,7 +15,6 @@ context.instanceOf( injector.apt.SingletonService.class, targetClass )
     );
     }
 
-    @Override
     public Class<NonSingletonWithConstructor> getExposedType() {
         return NonSingletonWithConstructor.class;
     }
