@@ -1,14 +1,13 @@
 package injector.apt;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
 
 public class SingletonServiceFactory implements Factory<SingletonService> {
 
     volatile private SingletonService instance;
 
     @Override
-    public SingletonService create(InjectionContext context) {
+    public SingletonService create(Injector context) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
@@ -22,7 +21,7 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
         return SingletonService.class;
     }
 
-    private SingletonService newInstance(InjectionContext context){
+    private SingletonService newInstance(Injector context){
         return new SingletonService(
         );
     }

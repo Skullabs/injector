@@ -4,11 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +12,7 @@ import java.util.List;
 public abstract class DefaultExposedServicesLoader<T> implements ExposedServicesLoader<T> {
 
     @SuppressWarnings("unchecked")
-    protected Iterable<T> loadAllImplementations( InjectionContext context ) {
+    protected Iterable<T> loadAllImplementations( Injector context ) {
         val instances = new ArrayList<T>();
 
         for ( val classExposedByFactory : getExposedClasses() ) {

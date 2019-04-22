@@ -10,7 +10,7 @@ public class {{simpleName}}ExposedServicesLoader extends DefaultExposedServicesL
     private Iterable<{{simpleName}}> loadedServices;
 
     @Override
-    public Iterable<{{simpleName}}> load(InjectionContext context) {
+    public Iterable<{{simpleName}}> load(Injector context) {
         if ( loadedServices == null )
             try {
                 loadedServices = loadAllImplementations(context);

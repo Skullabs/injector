@@ -10,7 +10,7 @@ public class MathOperationExposedServicesLoader extends DefaultExposedServicesLo
     private Iterable<MathOperation> loadedServices;
 
     @Override
-    public Iterable<MathOperation> load(InjectionContext context) {
+    public Iterable<MathOperation> load(Injector context) {
         if ( loadedServices == null )
             try {
                 loadedServices = loadAllImplementations(context);

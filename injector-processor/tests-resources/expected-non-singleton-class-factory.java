@@ -1,12 +1,11 @@
 package injector.apt;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
 
 public class NonSingletonServiceFactory implements Factory<injector.apt.NonSingletonService> {
 
     @Override
-    public NonSingletonService create(InjectionContext context) {
+    public NonSingletonService create(Injector context) {
     return new NonSingletonService(
     );
     }

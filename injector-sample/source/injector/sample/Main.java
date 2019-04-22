@@ -1,11 +1,11 @@
 package injector.sample;
 
-import injector.InjectionContext;
+import injector.*;
 
 public class Main {
 
     public static void main( String[] args) {
-        new InjectionContext()
+        Injector.create()
             .instanceOf( ServiceA.class )
             .notifyServiceB()
         ;

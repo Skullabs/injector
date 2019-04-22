@@ -1,12 +1,12 @@
 package injector.generated.exposed;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
+import injector.Injector;
 
 public class SumFactory implements Factory<Sum> {
 
     @Override
-    public Sum create(InjectionContext context) {
+    public Sum create(Injector context) {
         return new Sum();
     }
 

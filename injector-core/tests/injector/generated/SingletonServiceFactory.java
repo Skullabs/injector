@@ -1,7 +1,7 @@
 package injector.generated;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
+import injector.Injector;
 import lombok.val;
 
 public class SingletonServiceFactory implements Factory<SingletonService> {
@@ -9,7 +9,7 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
     volatile private SingletonService instance;
 
     @Override
-    public SingletonService create(InjectionContext context) {
+    public SingletonService create(Injector context) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
@@ -23,7 +23,7 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
         return SingletonService.class;
     }
 
-    private SingletonService newInstance(InjectionContext context){
+    private SingletonService newInstance(Injector context){
         val instance = new SingletonService();
         instance.repository = context.instanceOf( NonSingletonService.class );
         return instance;

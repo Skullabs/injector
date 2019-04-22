@@ -1,12 +1,11 @@
 package {{packageName}};
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
 
 public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
 
     @Override
-    public {{simpleName}} create(InjectionContext context) {
+    public {{simpleName}} create(Injector context) {
         return context.instanceOf({{type}}.class).{{#methods}}{{name}}(
 {{#parameterIterable}}
 {{^first}},{{/first}}

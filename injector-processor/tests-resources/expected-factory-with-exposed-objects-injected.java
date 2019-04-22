@@ -1,14 +1,13 @@
 package injector.apt.exposed;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
 
 public class CalculatorFactory implements Factory<Calculator> {
 
     volatile private Calculator instance;
 
     @Override
-    public Calculator create(InjectionContext context) {
+    public Calculator create(Injector context) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
@@ -22,7 +21,7 @@ public class CalculatorFactory implements Factory<Calculator> {
         return Calculator.class;
     }
 
-    private Calculator newInstance(InjectionContext context){
+    private Calculator newInstance(Injector context){
         return new Calculator(
 
 

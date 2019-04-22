@@ -1,7 +1,7 @@
 package injector.generated.exposed;
 
 import injector.DefaultExposedServicesLoader;
-import injector.InjectionContext;
+import injector.Injector;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class MathOperationExposedServicesLoader extends DefaultExposedServicesLo
     static final List<Class> exposedClasses = readAllClassNames(MathOperation.class);
 
     @Override
-    public Iterable<MathOperation> load(InjectionContext context) {
+    public Iterable<MathOperation> load(Injector context) {
         return loadAllImplementations( context );
     }
 

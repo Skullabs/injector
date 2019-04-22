@@ -1,12 +1,11 @@
 package injector.apt;
 
-import injector.Factory;
-import injector.InjectionContext;
+import injector.*;
 
 public class ImportantServiceFactory implements Factory<ImportantService> {
 
     @Override
-    public ImportantService create(InjectionContext context) {
+    public ImportantService create(Injector context) {
         return context.instanceOf(injector.apt.ProducerOfImportantServices.class).produceImportantService(
 
 context.instanceOf( injector.apt.NonSingletonWithConstructor.class )

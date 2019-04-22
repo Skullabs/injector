@@ -2,7 +2,7 @@ package injector;
 
 public interface Factory<T> {
 
-    T create( InjectionContext context );
+    T create( Injector context );
 
     Class<T> getExposedType();
 }

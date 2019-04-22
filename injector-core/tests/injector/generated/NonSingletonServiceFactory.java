@@ -1,12 +1,12 @@
 package injector.generated;
 
 import injector.Factory;
-import injector.InjectionContext;
+import injector.Injector;
 
 public class NonSingletonServiceFactory implements Factory<NonSingletonService> {
 
     @Override
-    public NonSingletonService create(InjectionContext context) {
+    public NonSingletonService create(Injector context) {
         return new NonSingletonService();
     }
 

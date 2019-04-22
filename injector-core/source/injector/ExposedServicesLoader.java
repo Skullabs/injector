@@ -13,7 +13,7 @@ public interface ExposedServicesLoader<T> {
      * @param context
      * @return
      */
-    Iterable<T> load(InjectionContext context );
+    Iterable<T> load(Injector context );
 
     Class<T> getExposedType();
 }

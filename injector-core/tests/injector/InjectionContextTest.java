@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InjectionContextTest {
 
-    final InjectionContext context = new InjectionContext();
+    final Injector context = Injector.create();
 
     @DisplayName( "Cannot retrieve instance of a non-registered object" )
     @Test void instanceOf(){

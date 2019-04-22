@@ -1,12 +1,12 @@
 package injector.generated.exposed;
 
 import injector.Factory;
-import injector.InjectionContext;
+import injector.Injector;
 
 public class MinusFactory implements Factory<Minus> {
 
     @Override
-    public Minus create(InjectionContext context) {
+    public Minus create(Injector context) {
         return new Minus();
     }
 
