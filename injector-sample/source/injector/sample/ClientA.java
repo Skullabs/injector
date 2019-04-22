@@ -1,8 +1,8 @@
 package injector.sample;
 
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
 public class ClientA {
 
     final String host;

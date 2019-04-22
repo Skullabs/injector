@@ -16,7 +16,7 @@ public interface Injector {
 
     <T> T instanceOf(Class<T> clazz);
 
-    <T> void registerFactoryOf(Class<T> type, Factory<T> factory);
+    <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory);
 
     <T> Iterable<T> instancesExposedAs(Class<T> clazz);
 
@@ -54,12 +54,13 @@ public interface Injector {
             throw new IllegalArgumentException("No factory defined for " + clazz.getCanonicalName());
         }
 
-        public <T> void registerFactoryOf(Class<T> type, Factory<T> factory) {
+        public <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory) {
             val oldValue = cache.put(type, factory);
             if (oldValue != null)
                 logger.accept(
                         "More than one Factory defined for " + type.getCanonicalName() + ". " + String.join(",",
                                 oldValue.getClass().getCanonicalName(), factory.getClass().getCanonicalName()));
+            return this;
         }
 
         public <T> Iterable<T> instancesExposedAs(Class<T> clazz) {
