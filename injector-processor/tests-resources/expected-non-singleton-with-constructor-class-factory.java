@@ -7,10 +7,10 @@ public class NonSingletonWithConstructorInjectorFactory implements Factory<injec
     public NonSingletonWithConstructor create(Injector context, Class targetClass) {
     return new NonSingletonWithConstructor(
 
-context.instanceOf( injector.apt.NonSingletonService.class, targetClass )
+context.instanceOf( injector.apt.NonSingletonService.class, getExposedType() )
 
 ,
-context.instanceOf( injector.apt.SingletonService.class, targetClass )
+context.instanceOf( injector.apt.SingletonService.class, getExposedType() )
 
     );
     }

@@ -10,7 +10,7 @@ public class CalculatorInjectorFactory implements Factory<Calculator> {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context, targetClass );
+                    instance = newInstance( context );
             }
         return instance;
     }
@@ -19,7 +19,7 @@ public class CalculatorInjectorFactory implements Factory<Calculator> {
         return Calculator.class;
     }
 
-    private Calculator newInstance(Injector context, Class targetClass){
+    private Calculator newInstance(Injector context){
         return new Calculator(
 
 

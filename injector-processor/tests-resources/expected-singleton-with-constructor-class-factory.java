@@ -10,7 +10,7 @@ public class SingletonWithConstructorInjectorFactory implements Factory<Singleto
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context, targetClass );
+                    instance = newInstance( context );
             }
         return instance;
     }
@@ -19,13 +19,13 @@ public class SingletonWithConstructorInjectorFactory implements Factory<Singleto
         return SingletonWithConstructor.class;
     }
 
-    private SingletonWithConstructor newInstance(Injector context, Class targetClass){
+    private SingletonWithConstructor newInstance(Injector context){
         return new SingletonWithConstructor(
 
-context.instanceOf( injector.apt.NonSingletonService.class, targetClass )
+context.instanceOf( injector.apt.NonSingletonService.class, getExposedType() )
 
 ,
-context.instanceOf( injector.apt.NonSingletonWithConstructor.class, targetClass )
+context.instanceOf( injector.apt.NonSingletonWithConstructor.class, getExposedType() )
 
         );
     }

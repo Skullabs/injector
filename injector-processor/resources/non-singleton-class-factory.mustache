@@ -10,7 +10,7 @@ public class {{simpleName}}InjectorFactory implements Factory<{{canonicalName}}>
         {{#constructor}}
 {{#parameterIterable}}
 {{^first}},{{/first}}
-{{^data.allOf}}context.instanceOf( {{data.type}}.class, targetClass ){{/data.allOf}}
+{{^data.allOf}}context.instanceOf( {{data.type}}.class, getExposedType() ){{/data.allOf}}
 {{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
 {{/parameterIterable}}
         {{/constructor}}

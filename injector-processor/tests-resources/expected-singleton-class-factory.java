@@ -10,7 +10,7 @@ public class SingletonServiceInjectorFactory implements Factory<SingletonService
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context, targetClass );
+                    instance = newInstance( context );
             }
         return instance;
     }
@@ -19,7 +19,7 @@ public class SingletonServiceInjectorFactory implements Factory<SingletonService
         return SingletonService.class;
     }
 
-    private SingletonService newInstance(Injector context, Class targetClass){
+    private SingletonService newInstance(Injector context){
         return new SingletonService(
         );
     }
