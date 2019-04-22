@@ -6,7 +6,7 @@ public class ServiceWhichRequiresAllMathOperationsFactory
     implements Factory<ServiceWhichRequiresAllMathOperations> {
 
     @Override
-    public ServiceWhichRequiresAllMathOperations create(Injector context) {
+    public ServiceWhichRequiresAllMathOperations create(Injector context, Class targetClass) {
         return new ServiceWhichRequiresAllMathOperations(
             context.instancesExposedAs( MathOperation.class )
         );

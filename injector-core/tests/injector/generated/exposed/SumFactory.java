@@ -6,7 +6,7 @@ import injector.Injector;
 public class SumFactory implements Factory<Sum> {
 
     @Override
-    public Sum create(Injector context) {
+    public Sum create(Injector context, Class targetClass) {
         return new Sum();
     }
 

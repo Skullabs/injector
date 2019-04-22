@@ -6,7 +6,7 @@ import injector.Injector;
 public class NonSingletonServiceFactory implements Factory<NonSingletonService> {
 
     @Override
-    public NonSingletonService create(Injector context) {
+    public NonSingletonService create(Injector context, Class targetClass) {
         return new NonSingletonService();
     }
 

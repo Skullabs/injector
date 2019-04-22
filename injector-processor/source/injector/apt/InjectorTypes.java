@@ -75,6 +75,10 @@ class InjectorParameter extends SimplifiedAST.Element {
         return null;
     }
 
+    public boolean isTargetClass(){
+        return getType().equals(Class.class.getCanonicalName());
+    }
+
     static SimplifiedAST.Element from(SimplifiedAST.Element element) {
         return new InjectorParameter()
             .setAnnotations( element.getAnnotations() )

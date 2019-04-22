@@ -5,12 +5,14 @@ import injector.*;
 public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
 
     @Override
-    public {{simpleName}} create(Injector context) {
-        return context.instanceOf({{type}}.class).{{#methods}}{{name}}(
+    public {{simpleName}} create(Injector context, Class targetClass) {
+        return context.instanceOf({{type}}.class, targetClass).{{#methods}}{{name}}(
+        targetClass
 {{#parameterIterable}}
-{{^first}},{{/first}}
-{{^data.allOf}}context.instanceOf( {{data.type}}.class ){{/data.allOf}}
+{{^data.targetClass}},
+{{^data.allOf}}context.instanceOf( {{data.type}}.class, targetClass ){{/data.allOf}}
 {{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
+{{/data.targetClass}}
 {{/parameterIterable}}
     {{/methods}}
         );

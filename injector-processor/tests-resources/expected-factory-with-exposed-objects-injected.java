@@ -7,11 +7,11 @@ public class CalculatorFactory implements Factory<Calculator> {
     volatile private Calculator instance;
 
     @Override
-    public Calculator create(Injector context) {
+    public Calculator create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context );
+                    instance = newInstance( context, targetClass );
             }
         return instance;
     }
@@ -21,7 +21,7 @@ public class CalculatorFactory implements Factory<Calculator> {
         return Calculator.class;
     }
 
-    private Calculator newInstance(Injector context){
+    private Calculator newInstance(Injector context, Class targetClass){
         return new Calculator(
 
 

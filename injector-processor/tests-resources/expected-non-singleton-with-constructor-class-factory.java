@@ -5,13 +5,13 @@ import injector.*;
 public class NonSingletonWithConstructorFactory implements Factory<injector.apt.NonSingletonWithConstructor> {
 
     @Override
-    public NonSingletonWithConstructor create(Injector context) {
+    public NonSingletonWithConstructor create(Injector context, Class targetClass) {
     return new NonSingletonWithConstructor(
 
-context.instanceOf( injector.apt.NonSingletonService.class )
+context.instanceOf( injector.apt.NonSingletonService.class, targetClass )
 
 ,
-context.instanceOf( injector.apt.SingletonService.class )
+context.instanceOf( injector.apt.SingletonService.class, targetClass )
 
     );
     }

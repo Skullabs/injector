@@ -37,7 +37,7 @@ class ExtraClientAFactory implements Factory<ClientA> {
     final ExtraClientA instance;
 
     @Override
-    public ExtraClientA create(Injector context) {
+    public ExtraClientA create(Injector context, Class targetClass) {
         return instance;
     }
 

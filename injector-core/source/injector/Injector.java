@@ -14,7 +14,11 @@ public interface Injector {
 
     <T> Factory<T> factoryOf(Class<T> clazz);
 
-    <T> T instanceOf(Class<T> clazz);
+    default <T> T instanceOf(Class<T> clazz) {
+        return instanceOf(clazz, null);
+    }
+
+    <T> T instanceOf(Class<T> clazz, Class targetClass);
 
     <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory);
 
@@ -46,10 +50,10 @@ public interface Injector {
             return cache.get(clazz);
         }
 
-        public <T> T instanceOf(Class<T> clazz) {
+        public <T> T instanceOf(Class<T> clazz, Class targetClass) {
             val t = factoryOf(clazz);
             if (t != null)
-                return t.create(this);
+                return t.create(this, targetClass);
 
             throw new IllegalArgumentException("No factory defined for " + clazz.getCanonicalName());
         }

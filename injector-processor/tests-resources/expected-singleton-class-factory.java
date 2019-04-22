@@ -7,11 +7,11 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
     volatile private SingletonService instance;
 
     @Override
-    public SingletonService create(Injector context) {
+    public SingletonService create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context );
+                    instance = newInstance( context, targetClass );
             }
         return instance;
     }
@@ -21,7 +21,7 @@ public class SingletonServiceFactory implements Factory<SingletonService> {
         return SingletonService.class;
     }
 
-    private SingletonService newInstance(Injector context){
+    private SingletonService newInstance(Injector context, Class targetClass){
         return new SingletonService(
         );
     }

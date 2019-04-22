@@ -6,7 +6,7 @@ import injector.Injector;
 public class MinusFactory implements Factory<Minus> {
 
     @Override
-    public Minus create(Injector context) {
+    public Minus create(Injector context, Class targetClass) {
         return new Minus();
     }
 

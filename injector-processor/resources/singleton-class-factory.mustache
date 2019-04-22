@@ -7,11 +7,11 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
     volatile private {{simpleName}} instance;
 
     @Override
-    public {{simpleName}} create(Injector context) {
+    public {{simpleName}} create(Injector context, Class targetClass) {
         if ( instance == null )
             synchronized (this) {
                 if ( instance == null )
-                    instance = newInstance( context );
+                    instance = newInstance( context, targetClass );
             }
         return instance;
     }
@@ -21,10 +21,10 @@ public class {{simpleName}}Factory implements Factory<{{simpleName}}> {
         return {{simpleName}}.class;
     }
 
-    private {{simpleName}} newInstance(Injector context){
+    private {{simpleName}} newInstance(Injector context, Class targetClass){
         return new {{simpleName}}(
 {{#methods}}{{#constructor}}{{#parameterIterable}}{{^first}},{{/first}}
-{{^data.allOf}}context.instanceOf( {{data.type}}.class ){{/data.allOf}}
+{{^data.allOf}}context.instanceOf( {{data.type}}.class, targetClass ){{/data.allOf}}
 {{#data.allOf}}context.instancesExposedAs( {{data.allOf}} ){{/data.allOf}}
 {{/parameterIterable}}{{/constructor}}
 {{/methods}}
