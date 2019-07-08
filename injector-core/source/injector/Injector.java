@@ -1,6 +1,7 @@
 package injector;
 
 import lombok.Setter;
+import lombok.experimental.*;
 import lombok.val;
 
 import java.util.Collections;
@@ -24,10 +25,31 @@ public interface Injector {
 
     <T> Iterable<T> instancesExposedAs(Class<T> clazz);
 
+    Injector setLogger(Consumer<String> loggerListener);
+
     static Injector create() {
-        return new DefaultInjector();
+        return create(true);
     }
 
+    static Injector create( boolean runJobs ) {
+        val injector = new DefaultInjector();
+
+        if ( runJobs ) {
+            val jobs = injector.instancesExposedAs( Job.class );
+            for ( val job : jobs ) {
+                try {
+                    injector.logger.accept("Running job: " + job );
+                    job.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return injector;
+    }
+
+    @Accessors(chain = true)
     class DefaultInjector implements Injector {
         final Map<Class, Factory> cache = new HashMap<>();
         final Map<Class, Iterable> exposed = new HashMap<>();
@@ -55,7 +77,14 @@ public interface Injector {
             if (t != null)
                 return t.create(this, targetClass);
 
-            throw new IllegalArgumentException("No factory defined for " + clazz.getCanonicalName());
+            val instances = instancesExposedAs(clazz).iterator();
+            if ( instances.hasNext() ) {
+                logger.accept("Found one or more instances which is implementing "
+                        + clazz.getCanonicalName() + ". Returning the first one.");
+                return (T) instances.next();
+            }
+
+            throw new IllegalArgumentException("No implementation available for " + clazz.getCanonicalName());
         }
 
         public <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory) {

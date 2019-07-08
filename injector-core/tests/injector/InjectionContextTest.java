@@ -47,4 +47,11 @@ class InjectionContextTest {
         assertTrue( iterator.next() instanceof Sum);
         assertTrue( iterator.next() instanceof Minus);
     }
+
+    @DisplayName("SHOULD be able to retrieve the first available instance from exposed interface")
+    @Test void instanceOf3(){
+        val instance = context.instanceOf( MathOperation.class );
+        assertNotNull( instance );
+        assertTrue( instance instanceof Sum );
+    }
 }

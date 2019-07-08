@@ -18,16 +18,21 @@ class GeneratedSourcesTest {
      * with {@link Injector}, this test will inject an extra factory
      * for {@link ClientB}.
      */
-    @Test void integrationTest(){
+    @Test void integrationTest() throws Exception {
+        val injector = Injector.create();
         val extraClient = new ExtraClientA("127.0.0.1", 80);
 
-        Injector.create()
+        injector
             .registerFactoryOf( ClientA.class, new ExtraClientAFactory(extraClient) )
             .instanceOf( ServiceA.class )
             .notifyServiceB()
         ;
 
+        Thread.sleep( 500L );
+
         assertTrue( extraClient.called );
+        assertTrue( injector.instanceOf(ClientBImpl.class).called );
+        assertTrue( injector.instanceOf(ClientBImpl.class).mainloopCalled );
     }
 }
 

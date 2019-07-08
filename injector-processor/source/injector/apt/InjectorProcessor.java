@@ -47,7 +47,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         super(
             Collections.emptyList(),
             Collections.singletonList(Producer.class),
-            Arrays.asList(Singleton.class, New.class)
+            Arrays.asList(Singleton.class, New.class, ExposedAs.class)
         );
         this.outputLocation = outputLocation;
     }

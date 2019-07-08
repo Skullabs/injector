@@ -1,8 +1,10 @@
 package {{packageName}};
 
 import injector.*;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
 * Auto generated server configuration for {@link {{packageName}}.{{simpleName}}}.
@@ -19,9 +21,9 @@ public class {{className}} implements Job {
                 try {
                     JOB_MAY_RUN = false;
                     BACKGROUND.shutdown();
-                    if (!executor.awaitTermination({{gracefulShutdownTime}}, TimeUnit.SECONDS)) {
-                        final List<Runnable> droppedTasks = executor.shutdownNow();
-                        System.out.println(
+                    if (!BACKGROUND.awaitTermination({{gracefulShutdownTime}}, TimeUnit.SECONDS)) {
+                        final List<Runnable> droppedTasks = BACKGROUND.shutdownNow();
+                        System.err.println(
                             "Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
                     }
                 } catch (final InterruptedException cause) {
@@ -39,7 +41,7 @@ public class {{className}} implements Job {
 
     public void execute() throws Exception {
         for ( int i=0; i<{{numberOfInstances}}; i++ ) {
-            executor.submit( new Runnable() {
+            BACKGROUND.submit( new Runnable() {
 
                 @Override
                 public void run(){
@@ -49,7 +51,8 @@ public class {{className}} implements Job {
                         }
                     } catch( final Throwable cause ) {
                         System.err.println(
-                            "Failed to execute {{simpleName}}.{{method}} in background. Aborted.", cause );
+                            "Failed to execute {{simpleName}}.{{method}} in background. Aborted." );
+                        cause.printStackTrace();
                     }
                 }
             });

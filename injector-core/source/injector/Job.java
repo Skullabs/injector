@@ -7,9 +7,9 @@ package injector;
  * fits their requirements. It's expected though that Jobs will take care of
  * its lifecycle.
  *
- * <pre>{@code
+ * <pre><code>
  *     // Custom Job
- *     @Exposed(Job.class)
+ *     &#64;Exposed(Job.class)
  *     class MyCustomJob implements Job {
  *
  *          public void execute(){
@@ -20,14 +20,14 @@ package injector;
  *     // Mainloop job
  *     class MyJob {
  *
- *          @Mainloop void run(){
+ *          &#64;Mainloop void run(){
  *              System.out.println("This method will be run infinitely!");
  *          }
  *     }
  *
  *     // Triggering both jobs
  *     Injector.create().instancesExposedAs( Job.class ).execute();
- * }</pre>
+ * </code></pre>
  */
 public interface Job {
 
