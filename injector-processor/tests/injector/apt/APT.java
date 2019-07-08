@@ -55,6 +55,10 @@ public class APT {
         return new File("output/apt/" + path + ".java");
     }
 
+    public File outputGeneratedFile( String path ) {
+        return new File("output/apt/" + path);
+    }
+
     public String readFileAsString( File file ) throws IOException {
         val bytes = Files.readAllBytes(file.toPath());
         return new String( bytes, StandardCharsets.UTF_8);

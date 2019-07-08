@@ -1,0 +1,58 @@
+package injector.apt;
+
+import injector.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
+/**
+* Auto generated server configuration for {@link injector.apt.MainloopAnnotatedClass}.
+*/
+@ExposedAs( Job.class )
+public class MainloopAnnotatedClassMainloopRunner0 implements Job {
+
+    private static final ExecutorService BACKGROUND = Executors.newFixedThreadPool(1);
+    private static boolean JOB_MAY_RUN = true;
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    JOB_MAY_RUN = false;
+                    BACKGROUND.shutdown();
+                    if (!executor.awaitTermination(120, TimeUnit.SECONDS)) {
+                        final List<Runnable> droppedTasks = executor.shutdownNow();
+                        System.out.println(
+                            "Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
+                    }
+                } catch (final InterruptedException cause) {
+                    cause.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private final MainloopAnnotatedClass instance;
+
+    public MainloopAnnotatedClassMainloopRunner0( final MainloopAnnotatedClass instance ){
+        this.instance = instance;
+    }
+
+    public void execute() throws Exception {
+        for ( int i=0; i<1; i++ ) {
+            executor.submit( new Runnable() {
+
+                @Override
+                public void run(){
+                    try {
+                        while( JOB_MAY_RUN ){
+                            instance.execute();
+                        }
+                    } catch( final Throwable cause ) {
+                        System.err.println(
+                            "Failed to execute MainloopAnnotatedClass.execute in background. Aborted.", cause );
+                    }
+                }
+            });
+        }
+    }
+}
