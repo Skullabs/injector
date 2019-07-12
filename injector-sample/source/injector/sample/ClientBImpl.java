@@ -12,12 +12,10 @@ public class ClientBImpl implements ClientB {
     @Override
     public void callMe() {
         called = true;
-        System.out.println( "Called ClientB" );
     }
 
     @injector.Mainloop
     void runMultipleTimes() throws InterruptedException {
-        System.err.println("Running in backgroud " + this);
         mainloopCalled = true;
         Thread.sleep(100L);
     }

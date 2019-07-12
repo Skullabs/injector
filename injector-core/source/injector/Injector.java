@@ -38,7 +38,6 @@ public interface Injector {
             val jobs = injector.instancesExposedAs( Job.class );
             for ( val job : jobs ) {
                 try {
-                    injector.logger.accept("Running job: " + job );
                     job.execute();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -51,21 +50,35 @@ public interface Injector {
 
     @Accessors(chain = true)
     class DefaultInjector implements Injector {
-        final Map<Class, Factory> cache = new HashMap<>();
-        final Map<Class, Iterable> exposed = new HashMap<>();
+        private final Map<Class, Factory> cache = new HashMap<>();
+        private Map<Class, Iterable> exposed;
 
         @Setter
         Consumer<String> logger = new StdOutErrorPrinter();
 
         public DefaultInjector() {
+            registerFactoryOf( Injector.class, new DefaultInjectorFactory() );
             val factories = ServiceLoader.load(Factory.class);
             for (val factory : factories)
                 registerFactoryOf(factory.getExposedType(), factory);
+        }
 
+        private Map<Class, Iterable> getExposed(){
+            if ( exposed == null )
+                synchronized (this){
+                    if ( exposed == null )
+                        exposed = readExposedClasses();
+                }
+            return exposed;
+        }
+
+        private Map<Class, Iterable> readExposedClasses(){
+            val exposed = new HashMap<Class, Iterable>();
             val loaders = ServiceLoader.load(ExposedServicesLoader.class);
             for (val loader : loaders) {
                 exposed.put(loader.getExposedType(), loader.load(this));
             }
+            return exposed;
         }
 
         public <T> Factory<T> factoryOf(Class<T> clazz) {
@@ -76,13 +89,6 @@ public interface Injector {
             val t = factoryOf(clazz);
             if (t != null)
                 return t.create(this, targetClass);
-
-            val instances = instancesExposedAs(clazz).iterator();
-            if ( instances.hasNext() ) {
-                logger.accept("Found one or more instances which is implementing "
-                        + clazz.getCanonicalName() + ". Returning the first one.");
-                return (T) instances.next();
-            }
 
             throw new IllegalArgumentException("No implementation available for " + clazz.getCanonicalName());
         }
@@ -97,7 +103,7 @@ public interface Injector {
         }
 
         public <T> Iterable<T> instancesExposedAs(Class<T> clazz) {
-            val ts = exposed.get(clazz);
+            val ts = getExposed().get(clazz);
             if (ts != null)
                 return ts;
             return Collections.emptyList();
@@ -109,6 +115,19 @@ public interface Injector {
             public void accept(String s) {
                 System.out.println( s );
             }
+        }
+    }
+
+    class DefaultInjectorFactory implements Factory<Injector> {
+
+        @Override
+        public Injector create(Injector context, Class target) {
+            return context;
+        }
+
+        @Override
+        public Class<Injector> getExposedType() {
+            return Injector.class;
         }
     }
 }

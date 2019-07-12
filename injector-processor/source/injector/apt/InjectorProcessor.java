@@ -6,7 +6,7 @@ import generator.apt.SimplifiedAbstractProcessor;
 import injector.*;
 import lombok.val;
 
-import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.*;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
@@ -134,12 +134,16 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             return;
 
         val filer = processingEnv.getFiler();
-        val source = filer.createSourceFile( className );
-        info( "  + " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")" );
-        try ( val writer = source.openWriter() ) {
-            generator.write( writer, factory );
-            getSpiClassesForFactory().add( className );
+        try {
+            val source = filer.createSourceFile(className);
+            info("  + " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")");
+            try (val writer = source.openWriter()) {
+                generator.write(writer, factory);
+            }
+        } catch ( FilerException cause ) {
+            warn("Ignoring already created " + className);
         }
+        getSpiClassesForFactory().add(className);
     }
 
     private void generateSPIFiles() throws IOException {
@@ -167,12 +171,16 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
             if ( !exposedClasses.containsKey( exposedAs ) ) {
                 val filer = processingEnv.getFiler();
-                val source = filer.createSourceFile(className);
-                try (val writer = source.openWriter()) {
-                    type.setCanonicalName(exposedAs);
-                    exposedServiceLoader.write(writer, type);
-                    exposedClasses.put(exposedAs, type);
+                try {
+                    val source = filer.createSourceFile(className);
+                    try (val writer = source.openWriter()) {
+                        type.setCanonicalName(exposedAs);
+                        exposedServiceLoader.write(writer, type);
+                    }
+                } catch ( FilerException cause ) {
+                    warn("Ignoring already created " + canonicalName);
                 }
+                exposedClasses.put(exposedAs, type);
             }
 
             loaderClasses.computeIfAbsent( exposedAs, t -> new ArrayList<>() ).add( canonicalName );
@@ -227,6 +235,10 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     private void info(final String msg) {
         processingEnv.getMessager().printMessage( Diagnostic.Kind.NOTE, msg );
+    }
+
+    private void warn(final String msg) {
+        processingEnv.getMessager().printMessage( Diagnostic.Kind.WARNING, msg );
     }
 
     private void error(final String msg) {

@@ -1,0 +1,11 @@
+/*.md-sidebar.md-sidebar--primary {
+    display: none !important;
+}
+.md-sidebar.md-sidebar--secondary {
+    transform: none !important;
+    -webkit-transform: none !important;
+    margin-left: 0 !important;
+}*/
+.md-tabs {
+    display: none !important;
+}
