@@ -2,6 +2,7 @@ package injector.apt;
 
 import injector.*;
 
+@javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
 public class NonSingletonWithConstructorInjectorFactory implements Factory<injector.apt.NonSingletonWithConstructor> {
 
     public NonSingletonWithConstructor create(Injector context, Class targetClass) {

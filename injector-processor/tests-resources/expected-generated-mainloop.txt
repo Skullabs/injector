@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 * Auto generated server configuration for {@link injector.apt.MainloopAnnotatedClass}.
 */
 @ExposedAs( Job.class )
+@javax.annotation.processing.Generated("injector.apt.MainloopMethodProcessor")
 public class MainloopAnnotatedClassMainloopRunner0 implements Job {
 
     private static final ExecutorService BACKGROUND = Executors.newFixedThreadPool(1);

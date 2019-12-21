@@ -3,6 +3,7 @@ package {{packageName}};
 import java.util.*;
 import injector.*;
 
+@{{jdkGeneratedAnnotation}}("injector.apt.InjectorProcessor")
 public class {{simpleName}}ExposedServicesLoader extends DefaultExposedServicesLoader<{{simpleName}}> {
 
     private final static List<Class> exposedClasses = readAllClassNames( {{simpleName}}.class );

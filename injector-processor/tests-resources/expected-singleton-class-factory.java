@@ -2,6 +2,7 @@ package injector.apt;
 
 import injector.*;
 
+@javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
 public class SingletonServiceInjectorFactory implements Factory<SingletonService> {
 
     volatile private SingletonService instance;

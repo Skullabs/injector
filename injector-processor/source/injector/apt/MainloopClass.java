@@ -16,17 +16,22 @@
 
 package injector.apt;
 
-import generator.apt.*;
-import injector.*;
-import lombok.*;
+import generator.apt.SimplifiedAST;
+import injector.Mainloop;
+import lombok.Value;
+import lombok.val;
 
-import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 @Value
 class MainloopClass {
 
+    final String jdkGeneratedAnnotation;
     final String packageName;
     final String simpleName;
     final String className;
@@ -39,6 +44,7 @@ class MainloopClass {
         return Extensions.convert(
             extractMethodName(type),
             method -> new MainloopClass(
+                type.getJdkGeneratedAnnotation(),
                 type.getPackageName(),
                 type.getSimpleName(),
                 type.getSimpleName() + "MainloopRunner" + (counter.getAndIncrement()),

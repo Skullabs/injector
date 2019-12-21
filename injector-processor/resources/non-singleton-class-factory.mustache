@@ -2,6 +2,7 @@ package {{packageName}};
 
 import injector.*;
 
+@{{jdkGeneratedAnnotation}}("injector.apt.InjectorProcessor")
 public class {{simpleName}}InjectorFactory implements Factory<{{canonicalName}}> {
 
     public {{simpleName}} create(Injector context, Class targetClass) {

@@ -2,6 +2,7 @@ package injector.apt;
 
 import injector.*;
 
+@javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
 public class ImportantServiceInjectorFactory implements Factory<ImportantService> {
 
     public ImportantService create(Injector context, Class targetClass) {

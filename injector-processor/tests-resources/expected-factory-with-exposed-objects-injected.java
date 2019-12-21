@@ -2,6 +2,7 @@ package injector.apt.exposed;
 
 import injector.*;
 
+@javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
 public class CalculatorInjectorFactory implements Factory<Calculator> {
 
     volatile private Calculator instance;

@@ -3,6 +3,7 @@ package injector.apt.exposed;
 import java.util.*;
 import injector.*;
 
+@javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
 public class MathOperationExposedServicesLoader extends DefaultExposedServicesLoader<MathOperation> {
 
     private final static List<Class> exposedClasses = readAllClassNames( MathOperation.class );
