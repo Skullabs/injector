@@ -90,7 +90,10 @@ public interface Injector {
             if (t != null)
                 return t.create(this, targetClass);
 
-            throw new IllegalArgumentException("No implementation available for " + clazz.getCanonicalName());
+            val msg = "No implementation available for " + clazz.getCanonicalName()
+                    + "\n This might be the case that the class exists but is not managed by Injector."
+                    + "\n Hint: try add @injector.Singleton or @injector.New in the class.\n";
+            throw new IllegalArgumentException(msg);
         }
 
         public <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory) {
