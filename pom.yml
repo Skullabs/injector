@@ -7,13 +7,13 @@ parent:
 
 artifactId: injector-parent
 groupId: io.skullabs.injector
-version: 1.1.0.Final
+version: 1.2.0
 packaging: pom
 
 properties:
-  version.lombok: "1.18.4"
-  version.compile-testing: "0.10"
-  version.class-generator: "0.2.0.Final"
+  version.lombok: "1.18.10"
+  version.compile-testing: "0.18"
+  version.class-generator: "0.3.0"
 
 modules:
  - "injector-core"

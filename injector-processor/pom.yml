@@ -3,12 +3,12 @@ modelVersion: 4.0.0
 parent:
   groupId: io.skullabs.injector
   artifactId: injector-parent
-  version: 1.1.0.Final
+  version: 1.2.0
   relativePath: "../pom.yml"
 
 artifactId: injector-processor
 groupId: io.skullabs.injector
-version: 1.1.0.Final
+version: 1.2.0
 packaging: jar
 
 dependencies:
