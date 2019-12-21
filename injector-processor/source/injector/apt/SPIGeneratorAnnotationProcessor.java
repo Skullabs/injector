@@ -59,10 +59,9 @@ public abstract class SPIGeneratorAnnotationProcessor extends SimplifiedAbstract
         val implementations = readResourceIfExists(spiLocation);
         implementations.addAll( this.spiClasses );
 
-        info( "Running Dependency Injection Optimization for "+spiClass+"..." );
         try (val resource = createResource(spiLocation)) {
             for (val implementation : implementations){
-                info( "  + " + implementation );
+                info( "Exposing " + implementation + " as implementation of " + spiClass );
                 resource.write(implementation + EOL);
             }
         }
@@ -70,16 +69,15 @@ public abstract class SPIGeneratorAnnotationProcessor extends SimplifiedAbstract
 
     private Set<String> readResourceIfExists( final String resourcePath ) throws IOException {
         val resourceContent = new HashSet<String>();
-        val resource = processingEnv.getFiler().getResource( this.outputLocation, "", resourcePath );
-        val file = new File( resource.toUri() );
+        val resource = resourceLocator.locate(resourcePath);
+        val file = new File( resource );
         if ( file.exists() )
             resourceContent.addAll( Files.readAllLines( file.toPath() ) );
         return resourceContent;
     }
 
     private Writer createResource(final String resourcePath ) throws IOException {
-        val resource = processingEnv.getFiler().getResource( this.outputLocation, "", resourcePath );
-        val uri = resource.toUri();
+        val uri = resourceLocator.locate(resourcePath);
         createNeededDirectoriesTo( uri );
         val file = createFile( uri );
         return new FileWriter( file );
@@ -98,9 +96,5 @@ public abstract class SPIGeneratorAnnotationProcessor extends SimplifiedAbstract
         if ( !file.exists() && !file.createNewFile() )
             throw new IOException("Can't create " + file.getAbsolutePath());
         return file;
-    }
-
-    protected void info(final String msg) {
-        processingEnv.getMessager().printMessage( Diagnostic.Kind.NOTE, msg );
     }
 }

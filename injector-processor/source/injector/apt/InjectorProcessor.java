@@ -6,9 +6,8 @@ import generator.apt.SimplifiedAbstractProcessor;
 import injector.*;
 import lombok.val;
 
-import javax.annotation.processing.*;
-import javax.tools.Diagnostic;
-import javax.tools.FileObject;
+import javax.annotation.processing.FilerException;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import java.io.File;
@@ -55,12 +54,10 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     @Override
     protected void process(Collection<SimplifiedAST.Type> types) {
         try {
-            info( "Running Dependency Injection Optimization..." );
             initializeClassCaches();
             generateClasses(types);
             generateSPIFiles();
             memorizeLoaders();
-            info( "Done!" );
         } catch ( Exception cause ){
             val msg = cause.getMessage() != null ? cause.getMessage() : "NullPointerException";
             error( msg );
@@ -75,7 +72,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     }
 
     private void generateClasses(Collection<SimplifiedAST.Type> types) throws IOException {
-        for (SimplifiedAST.Type type : types) {
+        for (val type : types) {
             val injectorTypes = splitInjectorTypes(type);
             generateRegularFactory(injectorTypes.getRegular());
             generateProducers(injectorTypes.getProducers());
@@ -136,7 +133,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         val filer = processingEnv.getFiler();
         try {
             val source = filer.createSourceFile(className);
-            info("  + " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")");
+            info("Generating " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")");
             try (val writer = source.openWriter()) {
                 generator.write(writer, factory);
             }
@@ -167,7 +164,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         val canonicalName = type.getCanonicalName();
         if ( exposedAs != null ) {
             val className = exposedAs + "ExposedServicesLoader";
-            info( "  + " + canonicalName + " (exposedClass=" + exposedAs + ")" );
+            info( "Generating " + className );
 
             if ( !exposedClasses.containsKey( exposedAs ) ) {
                 val filer = processingEnv.getFiler();
@@ -202,16 +199,15 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
     private Set<String> readResourceIfExists(final String resourcePath) throws IOException {
         final Set<String> resourceContent = new HashSet<>();
-        final FileObject resource = processingEnv.getFiler().getResource( this.outputLocation, "", resourcePath );
-        final File file = new File( resource.toUri() );
+        final URI resource = resourceLocator.locate(resourcePath);
+        final File file = new File( resource );
         if ( file.exists() )
             resourceContent.addAll( Files.readAllLines( file.toPath() ) );
         return resourceContent;
     }
 
     private Writer createResource(final String resourcePath) throws IOException {
-        final FileObject resource = processingEnv.getFiler().getResource( this.outputLocation, "", resourcePath );
-        final URI uri = resource.toUri();
+        final URI uri = resourceLocator.locate(resourcePath);
         createNeededDirectoriesTo( uri );
         final File file = createFile( uri );
         return new FileWriter( file );
@@ -231,17 +227,5 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         if ( !file.exists() )
             file.createNewFile();
         return file;
-    }
-
-    private void info(final String msg) {
-        processingEnv.getMessager().printMessage( Diagnostic.Kind.NOTE, msg );
-    }
-
-    private void warn(final String msg) {
-        processingEnv.getMessager().printMessage( Diagnostic.Kind.WARNING, msg );
-    }
-
-    private void error(final String msg) {
-        processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg );
     }
 }

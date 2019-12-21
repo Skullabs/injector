@@ -1,24 +1,15 @@
 package injector.apt;
 
-import com.google.common.collect.ImmutableList;
-import com.google.testing.compile.Compilation;
-import com.google.testing.compile.JavaFileObjects;
 import generator.apt.SimplifiedAPTRunner;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 
-import javax.annotation.processing.Processor;
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Locale;
 
-import static com.google.testing.compile.Compiler.javac;
 import static java.util.Arrays.asList;
 
 @SuppressWarnings("unchecked")
