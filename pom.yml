@@ -20,3 +20,12 @@ modules:
  - "injector-processor"
  - "injector-sample"
 
+
+build:
+  plugins:
+   - groupId: org.apache.maven.plugins
+     artifactId: maven-javadoc-plugin
+     version: 3.1.0
+     configuration:
+       source: "8"
+

@@ -32,4 +32,9 @@ build:
         org.apache.maven.plugins.shade.resource.ManifestResourceTransformer:
           manifestEntries:
             Main-Class: injector.sample.Main
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-javadoc-plugin
+    version: 3.1.0
+    configuration:
+      source: "8"
 
