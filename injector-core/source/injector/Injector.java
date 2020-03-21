@@ -23,6 +23,8 @@ public interface Injector {
 
     <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory);
 
+    <T> Injector registerExposedServiceLoaderOf(Class<T> type, ExposedServicesLoader<T> loader);
+
     <T> Iterable<T> instancesExposedAs(Class<T> clazz);
 
     Injector setLogger(Consumer<String> loggerListener);
@@ -51,7 +53,9 @@ public interface Injector {
     @Accessors(chain = true)
     class DefaultInjector implements Injector {
         private final Map<Class, Factory> cache = new HashMap<>();
-        private Map<Class, Iterable> exposed;
+        
+        private Map<Class, Iterable> exposed = new HashMap<>();
+        private boolean exposedClassesLoaded = false;
 
         @Setter
         Consumer<String> logger = new StdOutErrorPrinter();
@@ -64,10 +68,12 @@ public interface Injector {
         }
 
         private Map<Class, Iterable> getExposed(){
-            if ( exposed == null )
+            if ( !exposedClassesLoaded )
                 synchronized (this){
-                    if ( exposed == null )
-                        exposed = readExposedClasses();
+                    if ( !exposedClassesLoaded ) {
+                        exposedClassesLoaded = true;
+                        exposed.putAll(readExposedClasses());
+                    }
                 }
             return exposed;
         }
@@ -76,7 +82,7 @@ public interface Injector {
             val exposed = new HashMap<Class, Iterable>();
             val loaders = ServiceLoader.load(ExposedServicesLoader.class);
             for (val loader : loaders) {
-                exposed.put(loader.getExposedType(), loader.load(this));
+                registerExposedServiceLoaderOf(loader.getExposedType(), loader);
             }
             return exposed;
         }
@@ -88,12 +94,29 @@ public interface Injector {
         public <T> T instanceOf(Class<T> clazz, Class targetClass) {
             val t = factoryOf(clazz);
             if (t != null)
-                return t.create(this, targetClass);
+                return tryCreateInstanceOf(t, clazz, targetClass);
 
             val msg = "No implementation available for " + clazz.getCanonicalName()
                     + "\n This might be the case that the class exists but is not managed by Injector."
                     + "\n Hint: try add @injector.Singleton or @injector.New in the class.\n";
             throw new IllegalArgumentException(msg);
+        }
+
+        private <T> T tryCreateInstanceOf(Factory<T> factory, Class<T> loadedClazz, Class targetClass) {
+            try {
+                return factory.create(this, targetClass);
+            } catch (StackOverflowError cause) {
+                throw new FirstStackOverflowOccurrence(loadedClazz);
+            } catch (FirstStackOverflowOccurrence cause) {
+                throw new DirectCyclicDependencyException(loadedClazz, cause.currentTargetClass);
+            }
+        }
+
+        @Override
+        public <T> Injector registerExposedServiceLoaderOf(Class<T> type, ExposedServicesLoader<T> loader) {
+            val lazyLoader = new LazyExposedServiceLoader<T>( loader, this );
+            getExposed().put(loader.getExposedType(), lazyLoader);
+            return this;
         }
 
         public <T> Injector registerFactoryOf(Class<T> type, Factory<T> factory) {
