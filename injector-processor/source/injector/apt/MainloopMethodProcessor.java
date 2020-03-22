@@ -42,12 +42,12 @@ public class MainloopMethodProcessor extends SPIGeneratorAnnotationProcessor {
 
     @Override
     protected void process(Collection<SimplifiedAST.Type> types) {
-        flushSPIClasses();
+        cleanSPICache();
 
         try {
             for (val type : types)
                 generateClasses(MainloopClass.from(type));
-            generateSPIFiles();
+            flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

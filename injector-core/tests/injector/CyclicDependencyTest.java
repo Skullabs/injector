@@ -10,8 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CyclicDependencyTest {
@@ -38,6 +40,13 @@ public class CyclicDependencyTest {
         assertEquals(parent, child.parent);
     }
 
+    <T> List<T> toList(Iterable<T> data) {
+        val list = new ArrayList<T>();
+        for (T datum : data)
+            list.add(datum);
+        return list;
+    }
+
     @DisplayName("SHOULD detect Direct Cyclic Dependency between Parent and Child")
     @Test void instanceOf2(){
         try {
@@ -45,15 +54,10 @@ public class CyclicDependencyTest {
             fail("SHOULD detect Direct Cyclic Dependency between Parent and Child");
         } catch (DirectCyclicDependencyException cause) {
             cause.printStackTrace();
-            assertEquals(Scenario2.Parent.class, cause.targetClass);
-            assertEquals(Scenario2.Child.class, cause.causedByClass);
-        }
-    }
+            cause.targetClasses.sort(Comparator.comparing(Class::getCanonicalName));
 
-    <T> List<T> toList(Iterable<T> data) {
-        val list = new ArrayList<T>();
-        for (T datum : data)
-            list.add(datum);
-        return list;
+            val expectedInvolvedClasses = asList(Scenario2.Child.class, Scenario2.Parent.class);
+            assertEquals(expectedInvolvedClasses, cause.targetClasses);
+        }
     }
 }

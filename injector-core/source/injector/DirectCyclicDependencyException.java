@@ -2,15 +2,16 @@ package injector;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DirectCyclicDependencyException extends RuntimeException {
 
-    final Class targetClass;
-    final Class causedByClass;
+    final List<Class> targetClasses;
 
     public DirectCyclicDependencyException(Class targetClass, Class causedByClass) {
         super(generateMessage(targetClass, causedByClass), null, false, false);
-        this.targetClass = targetClass;
-        this.causedByClass = causedByClass;
+        this.targetClasses = Arrays.asList(targetClass, causedByClass);
     }
 
     static String generateMessage(Class targetClass, Class causedByClass){

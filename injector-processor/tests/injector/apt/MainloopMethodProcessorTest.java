@@ -16,12 +16,14 @@
 
 package injector.apt;
 
+import injector.Job;
 import lombok.*;
 import org.junit.jupiter.api.*;
 
 import javax.tools.*;
 import java.io.*;
 
+import static injector.apt.ServiceProviderImplementations.SPI_LOCATION;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,7 +73,7 @@ class MainloopMethodProcessorTest {
         val source = APT.asSource( APT.testFile(MainloopAnnotatedClass.class) );
         APT.runner().run( asList(source), asList(processor, injectorProcessor) ).printErrorsIfAny();
 
-        val spiFileLocation = APT.outputGeneratedFile(processor.getSpiLocation());
+        val spiFileLocation = APT.outputGeneratedFile(SPI_LOCATION + Job.class.getCanonicalName());
         val spiFile = APT.readFileAsString( spiFileLocation );
 
         val expected = generatedClassName1 + MainloopMethodProcessor.EOL;

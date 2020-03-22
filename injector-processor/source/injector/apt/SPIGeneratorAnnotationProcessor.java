@@ -19,11 +19,10 @@ package injector.apt;
 import generator.apt.*;
 import lombok.*;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.*;
 import java.io.*;
 import java.lang.annotation.*;
-import java.net.*;
-import java.nio.file.*;
 import java.util.*;
 
 @Getter
@@ -32,9 +31,9 @@ public abstract class SPIGeneratorAnnotationProcessor extends SimplifiedAbstract
     static final String EOL = "\n";
 
     private final JavaFileManager.Location outputLocation = StandardLocation.CLASS_OUTPUT;
-    private final String spiLocation;
+    private final ServiceProviderImplementations spiClasses = new ServiceProviderImplementations();
+
     private final String spiClass;
-    private List<String> spiClasses;
 
     public SPIGeneratorAnnotationProcessor(
             Class<?> spiType,
@@ -44,57 +43,23 @@ public abstract class SPIGeneratorAnnotationProcessor extends SimplifiedAbstract
     {
         super(fieldAnnotations, methodAnnotations, typeAnnotations);
         spiClass = spiType.getCanonicalName();
-        spiLocation = "META-INF/services/" + spiType.getCanonicalName();
     }
 
-    protected void flushSPIClasses(){
-        spiClasses = new ArrayList<>();
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        spiClasses.use(resourceLocator);
+    }
+
+    protected void cleanSPICache(){
+        spiClasses.cleanCaches();
     }
 
     protected void memorizeSPIFor( String canonicalClassName ) {
-        spiClasses.add( canonicalClassName );
+        spiClasses.memorizeImplementationOf( spiClass, canonicalClassName );
     }
 
-    protected void generateSPIFiles() throws IOException {
-        val implementations = readResourceIfExists(spiLocation);
-        implementations.addAll( this.spiClasses );
-
-        try (val resource = createResource(spiLocation)) {
-            for (val implementation : implementations){
-                info( "Exposing " + implementation + " as implementation of " + spiClass );
-                resource.write(implementation + EOL);
-            }
-        }
-    }
-
-    private Set<String> readResourceIfExists( final String resourcePath ) throws IOException {
-        val resourceContent = new HashSet<String>();
-        val resource = resourceLocator.locate(resourcePath);
-        val file = new File( resource );
-        if ( file.exists() )
-            resourceContent.addAll( Files.readAllLines( file.toPath() ) );
-        return resourceContent;
-    }
-
-    private Writer createResource(final String resourcePath ) throws IOException {
-        val uri = resourceLocator.locate(resourcePath);
-        createNeededDirectoriesTo( uri );
-        val file = createFile( uri );
-        return new FileWriter( file );
-    }
-
-    private void createNeededDirectoriesTo(final URI uri) throws IOException {
-        val dir = ( uri.isAbsolute() )
-                ? new File( uri ).getParentFile()
-                : new File( uri.toString() ).getParentFile();
-        if ( !dir.exists() && !dir.mkdirs() )
-            throw new IOException("Can't create " + dir.getAbsolutePath());
-    }
-
-    private File createFile(final URI uri) throws IOException {
-        val file = new File( uri );
-        if ( !file.exists() && !file.createNewFile() )
-            throw new IOException("Can't create " + file.getAbsolutePath());
-        return file;
+    protected void flush() throws IOException {
+        spiClasses.flush();
     }
 }
