@@ -1,6 +1,7 @@
 package injector.apt;
 
 import generator.apt.SimplifiedAST;
+import injector.apt.utils.DuplicatedConstructorRemover;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 
@@ -13,6 +14,7 @@ class InjectorTypesFactory {
         val regular = createNewType(type);
         val listOfProducers = new HashSet<InjectorType>();
 
+        DuplicatedConstructorRemover.remove(type);
         for (val method : type.getMethods()) {
             val injectorMethod = InjectorMethod.from( method );
             if ( injectorMethod.isProducer() )

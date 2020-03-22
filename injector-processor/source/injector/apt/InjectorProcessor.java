@@ -42,7 +42,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         super(
             Collections.emptyList(),
             Collections.singletonList(Producer.class),
-            Arrays.asList(Singleton.class, New.class, ExposedAs.class)
+            Arrays.asList(Singleton.class, New.class, ExposedAs.class, Exposed.class)
         );
         this.outputLocation = outputLocation;
     }
@@ -136,8 +136,13 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
 
         void generate(InjectorType type) throws IOException {
             val exposedAs = type.getExposedClass();
-            if ( exposedAs != null ) {
+            if ( exposedAs != null )
                 generateExposedClassFactory(type, exposedAs);
+
+            if ( type.isAnnotatedWith(Exposed.class) ) {
+                val exposedInterfaces = type.getExposedInterfaces();
+                for (String exposedInterface : exposedInterfaces)
+                    generateExposedClassFactory(type, exposedInterface);
             }
         }
 

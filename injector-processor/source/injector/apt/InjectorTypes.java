@@ -7,7 +7,9 @@ import lombok.ToString;
 import lombok.Value;
 import lombok.val;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ class InjectorType extends SimplifiedAST.Type {
 
     List<SimplifiedAST.Method> fixedMethods;
     String exposedClass;
+    List<String> exposedInterfaces;
 
     public boolean isSingleton(){
         return !isNew();
@@ -30,6 +33,24 @@ class InjectorType extends SimplifiedAST.Type {
 
     public boolean isNew(){
         return getAnnotation(New.class) != null;
+    }
+
+    public List<String> getExposedInterfaces() {
+        if ( exposedInterfaces == null ) {
+            exposedInterfaces = new ArrayList<>();
+
+            val exposed = getAnnotation(Exposed.class);
+            if ( exposed != null )
+                exposedInterfaces.addAll( loadAllImplementingInterfaces() );
+        }
+        
+        return exposedInterfaces;
+    }
+
+    private Collection<? extends String> loadAllImplementingInterfaces() {
+        return this.getInheritedInterfaces().stream()
+            .map(SimplifiedAST.Type::getCanonicalName)
+                .collect(Collectors.toList());
     }
 
     public String getExposedClass(){
@@ -40,6 +61,10 @@ class InjectorType extends SimplifiedAST.Type {
                     .replaceAll(".class$", "");
         }
         return exposedClass;
+    }
+
+    public boolean isAnnotatedWith(Class<? extends Annotation> annotationClass) {
+        return getAnnotation(annotationClass) != null;
     }
 
     @Override
