@@ -7,15 +7,15 @@ parent:
 
 artifactId: injector-sample
 groupId: io.skullabs.injector
-version: 1.2.0
+version: "1.3.0"
 packaging: jar
 
 properties:
   version.lombok: "1.18.6"
 
 dependencies:
- - { groupId: io.skullabs.injector, artifactId: injector-core, version: "1.2.0" }
- - { groupId: io.skullabs.injector, artifactId: injector-processor, version: "1.2.0", scope: provided }
+ - { groupId: io.skullabs.injector, artifactId: injector-core, version: "1.3.0" }
+ - { groupId: io.skullabs.injector, artifactId: injector-processor, version: "1.3.0", scope: provided }
 
 build:
   plugins:
