@@ -35,12 +35,32 @@ bump_version(){
   println "CURRENT_VERSION='$VERSION'" > ./builder.conf
 }
 
+config_maven(){
+  if [ "$OSSRH_USERNAME" = "" -o "$OSSRH_PASSWORD" = "" ]; then
+    println "ERROR: Variables OSSRH_USERNAME or OSSRH_PASSWORD not defined"
+    exit 200
+  fi
+
+  cat <<EOF> ~/.m2/settings.xml
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>${OSSRH_USERNAME}</username>
+      <password>${OSSRH_PASSWORD}</password>
+    </server>
+  </servers>
+</settings>
+EOF
+}
+
 # MAIN
 case $1 in
   "bump") bump_version ;;
   "build") build ;;
   "deploy_local"|"local") deploy_local ;;
   "deploy"|"remote") deploy_remote ;;
+  "config_maven") config_maven ;;
   *)
     cat <<EOF | sed 's/^[ \t]*//'
       Usage: $0 <OPTION>
@@ -52,6 +72,7 @@ case $1 in
       - remote - deploys generated artifacts into Maven Central
       - deploy (same as 'remote')
       - deploy_local (same as 'local')
+      - config_maven - configure Maven to publish into Sonatype Staging Repository
 
 EOF
     exit 1
