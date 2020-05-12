@@ -42,7 +42,8 @@ config_gpg(){
   fi
 
   mkdir -p ~/.gnupg/
-  print "${GPG_SIGNING_KEY}" | base64 --decode > ~/.gnupg/pubring.kbx
+  print "${GPG_SIGNING_KEY}" | base64 --decode > ~/.gnupg/private.key
+  gpg --import ~/.gnupg/private.key
 }
 
 config_maven(){
