@@ -7,8 +7,7 @@ on:
       - "hotfix/[0-9]+*"
       - "bugfix/[0-9]+*"
       - "enhancement/[0-9]+*"
-      - "version/.*"
-
+      - "version/*"
 
 jobs:
   build:
