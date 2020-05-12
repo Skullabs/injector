@@ -25,12 +25,12 @@ jobs:
 
       - name: Configure Maven
         run: ./builder.sh config_maven
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 
       - name: Build with Maven
         run: ./builder.sh build
 
       - name: Publish to Sonatype Staging Repository
         run: ./builder.sh remote
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
