@@ -1,6 +1,6 @@
 # Configuring your project
 Injector makes heavy use of annotation processor, so make sure you have
-properly configured you project to support it. All assets generated are
+properly configured you project to support it. All generated assets are
 compatible with Java version 8 or superior.
 
 !!! important
@@ -18,34 +18,51 @@ for generating factories and metadata required to perform the dependence injecti
 All of them are available in Maven Central and you can import on your Gradle/Maven
 project as below described.
 
-```groovy tab="Gradle"
+```groovy tab="Gradle (Kotlin)"
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile     'io.skullabs.injector:injector-core:1.1.0.Final'
-    compileOnly 'io.skullabs.injector:injector-processor:1.1.0.Final'
+    implementation(platform("io.skullabs.injector:injector-bom:1.4.0"))
+
+    implementation("io.skullabs.injector:injector-core")
+    compileOnly("io.skullabs.injector:injector-processor")
 }
 ```
 
-```yaml tab="Maven (yaml)"
-dependencies:
-- { groupId: io.skullabs.injector, artifactId: injector-core, version: 1.1.0.Final }
-- { groupId: io.skullabs.injector, artifactId: injector-processor, version: 1.1.0.Final, scope: provided }
+```yaml tab="Maven (pom.kts)"
+dependencies {
+    compile("io.skullabs.injector:injector-core")
+    provided("io.skullabs.injector:injector-processor")
+}
+
+dependencyManagement {
+    dependencies {
+        import("io.skullabs.injector:injector-bom:1.4.0")
+    }
+}
 ```
 
-```xml tab="Maven (xml)"
-<dependency>
-    <groupId>io.skullabs.injector</groupId>
-    <artifactId>injector-core</artifactId>
-    <version>1.1.0.Final</version>
-</dependency>
-<dependency>
-    <groupId>io.skullabs.injector</groupId>
-    <artifactId>injector-processor</artifactId>
-    <version>1.1.0.Final</version>
-    <scope>provided</scope>
-</dependency>
-```
+```xml tab="Maven (pom.xml)"
+<dependencies>
+    <dependency>
+        <groupId>io.skullabs.injector</groupId>
+        <artifactId>injector-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.skullabs.injector</groupId>
+        <artifactId>injector-processor</artifactId>
+    </dependency>
+</dependencies>
 
+<dependencyManagement>
+    <dependency>
+        <groupId>io.skullabs.injector</groupId>
+        <artifactId>injector-bom</artifactId>
+        <version>1.4.0</version>
+        <scope>import</scope>
+        <type>pom</type>
+    </dependency>
+</dependencyManagement>
+```
