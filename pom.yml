@@ -19,7 +19,7 @@ modules:
  - "injector-core"
  - "injector-processor"
  - "injector-sample"
-
+ - "injector-bom"
 
 build:
   plugins:
@@ -28,4 +28,3 @@ build:
      version: 3.1.0
      configuration:
        source: "8"
-
