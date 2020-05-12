@@ -1,6 +1,6 @@
 # Configuring your project
 Injector makes heavy use of annotation processor, so make sure you have
-properly configured you project to support it. All assets generated are
+properly configured you project to support it. All generated assets are
 compatible with Java version 8 or superior.
 
 !!! important
