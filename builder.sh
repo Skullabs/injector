@@ -41,6 +41,7 @@ config_gpg(){
     exit 200
   fi
 
+  mkdir -p ~/.gnupg/
   print "${GPG_SIGNING_KEY}" | base64 --decode > ~/.gnupg/pubring.kbx
 }
 
