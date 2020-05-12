@@ -32,12 +32,14 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Configure Maven Credentials and GPG Key
-        run:
-         - ./builder.sh config_maven
-         - ./builder.sh config_gpg
+        run: ./builder.sh config_maven
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+
+      - name: Configure GPG Key
+        run: ./builder.sh config_gpg
+        env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
       - name: Build with Maven
