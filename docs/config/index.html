@@ -389,35 +389,53 @@ for generating factories and metadata required to perform the dependence injecti
 project as below described.</p>
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
-<label for="__tab_1_0">Gradle</label>
+<label for="__tab_1_0">Gradle (Kotlin)</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="n">repositories</span> <span class="o">{</span>
     <span class="n">mavenCentral</span><span class="o">()</span>
 <span class="o">}</span>
 
 <span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">compile</span>     <span class="s1">&#39;io.skullabs.injector:injector-core:1.1.0.Final&#39;</span>
-    <span class="n">compileOnly</span> <span class="s1">&#39;io.skullabs.injector:injector-processor:1.1.0.Final&#39;</span>
+    <span class="n">implementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">&quot;io.skullabs.injector:injector-bom:1.4.0&quot;</span><span class="o">))</span>
+
+    <span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;io.skullabs.injector:injector-core&quot;</span><span class="o">)</span>
+    <span class="n">compileOnly</span><span class="o">(</span><span class="s2">&quot;io.skullabs.injector:injector-processor&quot;</span><span class="o">)</span>
 <span class="o">}</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
-<label for="__tab_1_1">Maven (yaml)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
-<span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nt"> groupId</span><span class="p">:</span> <span class="nv">io.skullabs.injector</span><span class="p p-Indicator">,</span><span class="nt"> artifactId</span><span class="p">:</span> <span class="nv">injector-core</span><span class="p p-Indicator">,</span><span class="nt"> version</span><span class="p">:</span> <span class="nv">1.1.0.Final</span> <span class="p p-Indicator">}</span>
-<span class="p p-Indicator">-</span> <span class="p p-Indicator">{</span><span class="nt"> groupId</span><span class="p">:</span> <span class="nv">io.skullabs.injector</span><span class="p p-Indicator">,</span><span class="nt"> artifactId</span><span class="p">:</span> <span class="nv">injector-processor</span><span class="p p-Indicator">,</span><span class="nt"> version</span><span class="p">:</span> <span class="nv">1.1.0.Final</span><span class="p p-Indicator">,</span><span class="nt"> scope</span><span class="p">:</span> <span class="nv">provided</span> <span class="p p-Indicator">}</span>
+<label for="__tab_1_1">Maven (pom.kts)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">dependencies {</span>
+    <span class="l l-Scalar l-Scalar-Plain">compile(&quot;io.skullabs.injector:injector-core&quot;)</span>
+    <span class="l l-Scalar l-Scalar-Plain">provided(&quot;io.skullabs.injector:injector-processor&quot;)</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+
+<span class="l l-Scalar l-Scalar-Plain">dependencyManagement {</span>
+    <span class="l l-Scalar l-Scalar-Plain">dependencies {</span>
+        <span class="l l-Scalar l-Scalar-Plain">import(&quot;io.skullabs.injector:injector-bom:1.4.0&quot;)</span>
+    <span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_2" />
-<label for="__tab_1_2">Maven (xml)</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>io.skullabs.injector<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>injector-core<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>1.1.0.Final<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>io.skullabs.injector<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>injector-processor<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>1.1.0.Final<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
+<label for="__tab_1_2">Maven (pom.xml)</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>io.skullabs.injector<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>injector-core<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>io.skullabs.injector<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>injector-processor<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+
+<span class="nt">&lt;dependencyManagement&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>io.skullabs.injector<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>injector-bom<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version&gt;</span>1.4.0<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span>
 </pre></div></div>
 </div>
                 
