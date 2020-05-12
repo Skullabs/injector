@@ -1,14 +1,11 @@
 modelVersion: 4.0.0
 
-parent:
-  groupId: io.skullabs.injector
-  artifactId: injector-parent
-  version: "1.4.0"
-  relativePath: "../pom.yml"
-
+groupId: io.skullabs.injector
 artifactId: injector-bom
+version: "1.4.0"
 packaging: pom
 
-dependencies:
-  - { groupId: "io.skullabs.injector", artifactId: injector-core, version: "1.4.0" }
-  - { groupId: "io.skullabs.injector", artifactId: injector-processor, version: "1.4.0", scope: provided }
+dependencyManagement:
+  dependencies:
+    - { groupId: "io.skullabs.injector", artifactId: injector-core, version: "1.4.0" }
+    - { groupId: "io.skullabs.injector", artifactId: injector-processor, version: "1.4.0", scope: provided }
