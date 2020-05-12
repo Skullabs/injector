@@ -35,10 +35,22 @@ bump_version(){
   println "CURRENT_VERSION='$VERSION'" > ./builder.conf
 }
 
+config_gpg(){
+  if [ "$GPG_SIGNING_KEY" = "" ]; then
+    println "ERROR: No GPG_SIGNING_KEY defined"
+    exit 200
+  fi
+
+  mkdir -p ~/.gnupg/
+  print "${GPG_SIGNING_KEY}" | base64 --decode > ~/.gnupg/private.key
+  gpg --import ~/.gnupg/private.key
+}
+
 config_maven(){
   if [ "$OSSRH_USERNAME" = "" -o "$OSSRH_PASSWORD" = "" ]; then
     println "ERROR: Variables OSSRH_USERNAME or OSSRH_PASSWORD not defined"
-    exit 200
+    exit 201
+
   fi
 
   cat <<EOF> ~/.m2/settings.xml
@@ -61,6 +73,7 @@ case $1 in
   "deploy_local"|"local") deploy_local ;;
   "deploy"|"remote") deploy_remote ;;
   "config_maven") config_maven ;;
+  "config_gpg") config_gpg ;;
   *)
     cat <<EOF | sed 's/^[ \t]*//'
       Usage: $0 <OPTION>
@@ -73,6 +86,7 @@ case $1 in
       - deploy (same as 'remote')
       - deploy_local (same as 'local')
       - config_maven - configure Maven to publish into Sonatype Staging Repository
+      - config_gpg - configure GPG key from the env variable
 
 EOF
     exit 1
