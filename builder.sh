@@ -50,6 +50,7 @@ config_maven(){
   if [ "$OSSRH_USERNAME" = "" -o "$OSSRH_PASSWORD" = "" ]; then
     println "ERROR: Variables OSSRH_USERNAME or OSSRH_PASSWORD not defined"
     exit 201
+
   fi
 
   cat <<EOF> ~/.m2/settings.xml
