@@ -20,12 +20,13 @@ class InjectorTypes {
     Set<InjectorType> producers;
 }
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "uniqueIdentifier")
 class InjectorType extends SimplifiedAST.Type {
 
     List<SimplifiedAST.Method> fixedMethods;
     String exposedClass;
     List<String> exposedInterfaces;
+    String uniqueIdentifier;
 
     public boolean isSingleton(){
         return !isNew();
@@ -67,9 +68,17 @@ class InjectorType extends SimplifiedAST.Type {
         return getAnnotation(annotationClass) != null;
     }
 
+    public String getUniqueIdentifier() {
+        if (uniqueIdentifier == null) {
+            long hashCode = Math.abs((long) (Integer.MAX_VALUE + hashCode()));
+            uniqueIdentifier = String.valueOf(hashCode);
+        }
+        return uniqueIdentifier;
+    }
+
     @Override
     public String toString() {
-        val ann = String.join( " ", getAnnotations().stream().map(i -> i.toString() ).collect(Collectors.toList() ) );
+        val ann = getAnnotations().stream().map(SimplifiedAST.Annotation::toString).collect(Collectors.joining(" "));
         return ann + ":" + super.toString();
     }
 }

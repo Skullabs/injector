@@ -100,7 +100,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         }
 
         private void generateFactory(ClassGenerator generator, InjectorType factory ) throws IOException {
-            val className = factory.getCanonicalName() + "InjectorFactory";
+            val className = factory.getCanonicalName() + "InjectorFactory" + factory.getUniqueIdentifier();
             if (!factoryHasBeenProcessedBefore( className ) ) {
                 createSourceFile(generator, factory, className);
                 memorizeProcessedFactory(className);
@@ -147,7 +147,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         }
 
         private void generateExposedClassFactory(InjectorType type, String exposedAs) throws IOException {
-            val className = exposedAs + "ExposedServicesLoader";
+            val className = exposedAs + "ExposedServicesLoader" + type.getUniqueIdentifier();
             val canonicalName = type.getCanonicalName();
 
             if ( !exposedClasses.containsKey( exposedAs ) ) {

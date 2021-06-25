@@ -4,7 +4,7 @@ import java.util.*;
 import injector.*;
 
 @javax.annotation.processing.Generated("injector.apt.InjectorProcessor")
-public class MathOperationExposedServicesLoader extends DefaultExposedServicesLoader<MathOperation> {
+public class MathOperationExposedServicesLoader543024351 extends DefaultExposedServicesLoader<MathOperation> {
 
     private final static List<Class> exposedClasses = readAllClassNames( MathOperation.class );
 

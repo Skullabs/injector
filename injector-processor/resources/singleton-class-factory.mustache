@@ -3,7 +3,7 @@ package {{packageName}};
 import injector.*;
 
 @{{jdkGeneratedAnnotation}}("injector.apt.InjectorProcessor")
-public class {{simpleName}}InjectorFactory implements Factory<{{simpleName}}> {
+public class {{simpleName}}InjectorFactory{{uniqueIdentifier}} implements Factory<{{simpleName}}> {
 
     volatile private {{simpleName}} instance;
 
