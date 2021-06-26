@@ -23,6 +23,8 @@ class InjectorType extends SimplifiedAST.Type {
     List<SimplifiedAST.Method> fixedMethods;
     String exposedClass;
     List<String> exposedInterfaces;
+
+    @Getter
     String uniqueIdentifier;
 
     public boolean isSingleton(){
@@ -65,12 +67,9 @@ class InjectorType extends SimplifiedAST.Type {
         return getAnnotation(annotationClass) != null;
     }
 
-    public String getUniqueIdentifier() {
-        if (uniqueIdentifier == null) {
-            long hashCode = Math.abs((long) (Integer.MAX_VALUE + hashCode()));
-            uniqueIdentifier = String.valueOf(hashCode);
-        }
-        return uniqueIdentifier;
+    public void computeUniqueIdentifier() {
+        // TODO: UniqueIdentifier is empty at the moment, but it's here as a preparation for a future planed improvement
+        uniqueIdentifier = "";
     }
 
     @Override
