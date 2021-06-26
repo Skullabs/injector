@@ -1,4 +1,4 @@
-package injector.apt;
+package injector.apt.example;
 
 import injector.Singleton;
 

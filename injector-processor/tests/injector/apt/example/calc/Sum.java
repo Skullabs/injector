@@ -1,4 +1,4 @@
-package injector.apt.exposed;
+package injector.apt.example.calc;
 
 import injector.ExposedAs;
 import injector.Singleton;
