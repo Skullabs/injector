@@ -1,4 +1,4 @@
-package injector.apt;
+package injector.apt.example;
 
 import injector.*;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
-* Auto generated server configuration for {@link injector.apt.MainloopAnnotatedClass}.
+* Auto generated server configuration for {@link injector.apt.example.MainloopAnnotatedClass}.
 */
 @ExposedAs( Job.class )
 @javax.annotation.processing.Generated("injector.apt.MainloopMethodProcessor")

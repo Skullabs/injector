@@ -1,4 +1,4 @@
-package injector.apt;
+package injector.apt.example;
 
 import injector.*;
 
@@ -23,10 +23,10 @@ public class SingletonWithConstructorInjectorFactory implements Factory<Singleto
     private SingletonWithConstructor newInstance(Injector context){
         return new SingletonWithConstructor(
 
-context.instanceOf( injector.apt.NonSingletonService.class, getExposedType() )
+context.instanceOf( injector.apt.example.NonSingletonService.class, getExposedType() )
 
 ,
-context.instanceOf( injector.apt.NonSingletonWithConstructor.class, getExposedType() )
+context.instanceOf( injector.apt.example.NonSingletonWithConstructor.class, getExposedType() )
 
         );
     }
