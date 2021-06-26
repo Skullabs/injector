@@ -17,6 +17,7 @@ class InjectorTypesFactory {
 
         DuplicatedConstructorRemover.removeFrom(type);
         DuplicatedMethodsRemover.removeFrom(type);
+
         for (val method : type.getMethods()) {
             val injectorMethod = InjectorMethod.from( method );
             if ( injectorMethod.isProducer() )
@@ -25,6 +26,7 @@ class InjectorTypesFactory {
                 regular.getMethods().add( injectorMethod );
         }
 
+        regular.computeUniqueIdentifier();
         return new InjectorTypes( regular, listOfProducers );
     }
 
@@ -34,7 +36,10 @@ class InjectorTypesFactory {
                 .setType( type.getCanonicalName() )
                 .setAnnotations( type.getAnnotations() )
                 .setName( type.getName() );
+
         iType.getMethods().add( method );
+        iType.computeUniqueIdentifier();
+
         return iType;
     }
 
@@ -42,6 +47,8 @@ class InjectorTypesFactory {
         return (InjectorType)new InjectorType()
                 .setCanonicalName( type.getCanonicalName() )
                 .setFields( type.getFields() )
+                .setInterfaces( type.getInterfaces() )
+                .setInterface( type.isInterface() )
                 .setType( type.getType() )
                 .setAnnotations( type.getAnnotations() )
                 .setName( type.getName() );
