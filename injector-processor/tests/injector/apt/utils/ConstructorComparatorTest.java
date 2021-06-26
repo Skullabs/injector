@@ -1,29 +1,24 @@
 package injector.apt.utils;
 
-import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAST.Annotation;
 import generator.apt.SimplifiedAST.Element;
 import generator.apt.SimplifiedAST.Method;
-import injector.Exposed;
-import injector.apt.utils.ConstructorComparator;
+import injector.Constructor;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConstructorComparatorTest {
 
     Method m1 = (Method) new Method()
         .setParameters(singletonList(new Element()))
         .setAnnotations(singletonList(
-            new Annotation().setType(Exposed.class.getCanonicalName())
+            new Annotation().setType(Constructor.class.getCanonicalName())
         ));
-    
+
     Method m2 = new Method()
         .setParameters(asList(new Element(), new Element()));
 

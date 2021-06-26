@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class DuplicatedConstructorRemover {
 
-    public void remove(SimplifiedAST.Type type) {
+    public void removeFrom(SimplifiedAST.Type type) {
         val constructors = type.getMethods().stream()
             .filter(Method::isConstructor)
             .sorted(ConstructorComparator::compare)
