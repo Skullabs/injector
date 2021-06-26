@@ -62,7 +62,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             spiClasses.flush();
             loaderClasses.flush();
         } catch ( Exception cause ){
-            val msg = cause.getMessage() != null ? cause.getMessage() : "NullPointerException";
+            val msg = cause.getMessage() != null ? cause.getMessage() : "<null error msg>";
             error( msg );
             cause.printStackTrace();
         }
@@ -119,12 +119,12 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             try {
                 val filer = processingEnv.getFiler();
                 val source = filer.createSourceFile(className);
-                info("Generating " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")");
+                info("Generating " + factory.getCanonicalName() + "InjectorFactory"+ factory.getUniqueIdentifier() +" (singleton=" + factory.isSingleton() + ")");
                 try (val writer = source.openWriter()) {
                     generator.write(writer, factory);
                 }
             } catch ( FilerException cause ) {
-                warn("Ignoring already created " + className);
+                handleFailureWhenCreatingFile(cause, className);
             }
         }
     }
@@ -169,8 +169,16 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
                     exposedServiceLoader.write(writer, type);
                 }
             } catch ( FilerException cause ) {
-                warn("Ignoring already created " + type.getCanonicalName() );
+                handleFailureWhenCreatingFile(cause, type.getCanonicalName());
             }
         }
+    }
+
+    void handleFailureWhenCreatingFile(FilerException cause, String fileName) throws FilerException {
+        if (!cause.getMessage().contains("recreate") && !cause.getMessage().contains("reopen") ){
+            throw cause;
+        }
+
+        warn("Ignoring already created " + fileName );
     }
 }

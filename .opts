@@ -1,0 +1,7 @@
+# GitHub shortcuts
+there=git push
+theref=git push --force
+here=git pull --rebase
+amend=git commit --amend
+revisit=git rebase -i
+

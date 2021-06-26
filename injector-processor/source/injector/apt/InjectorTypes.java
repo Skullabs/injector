@@ -2,10 +2,7 @@ package injector.apt;
 
 import generator.apt.SimplifiedAST;
 import injector.*;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.Value;
-import lombok.val;
+import lombok.*;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
