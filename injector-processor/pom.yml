@@ -14,6 +14,7 @@ packaging: jar
 dependencies:
  - { groupId: io.skullabs.injector, artifactId: injector-core, version: "${project.version}" }
  - { groupId: io.skullabs.apt, artifactId: class-generator, version: "${version.class-generator}" }
+ - { groupId: org.projectlombok, artifactId: lombok, version: "${version.lombok}", scope: compile }
  - { groupId: com.google.truth, artifactId: truth, version: 0.30, scope: test }
  - { groupId: com.google.testing.compile, artifactId: compile-testing, version: "${version.compile-testing}", scope: test }
 
