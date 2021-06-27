@@ -1,7 +1,8 @@
 package injector;
 
+import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.*;
+import lombok.experimental.Accessors;
 import lombok.val;
 
 import java.util.Collections;
@@ -57,8 +58,26 @@ public interface Injector {
         private Map<Class, Iterable> exposed = new HashMap<>();
         private boolean exposedClassesLoaded = false;
 
+        /**
+         * If strict mode is turned on, it won't be tolerant to
+         * any sort of failure, which might cause the service discovery
+         * to stop working altogether in such cases.
+         *
+         * Turning strict mode off will allow Injector to completely
+         * ignore such problems, allowing one to use dependency injection
+         * even though something went wrong with one of its dependencies.
+         *
+         * This is usually the expected behaviour, as Injector will most
+         * likely fail only due to security-protection exception (e.g.
+         * trying to generate classes for {@code java.lang} package).
+         *
+         * By default, strict mode is off.
+         */
+        @Getter @Setter
+        private boolean useStrictMode = false;
+
         @Setter
-        Consumer<String> logger = new StdOutErrorPrinter();
+        Consumer<String> logger = new StdErrorPrinter();
 
         public DefaultInjector() {
             registerFactoryOf( Injector.class, new DefaultInjectorFactory() );
@@ -81,9 +100,18 @@ public interface Injector {
         private Map<Class, Iterable> readExposedClasses(){
             val exposed = new HashMap<Class, Iterable>();
             val loaders = ServiceLoader.load(ExposedServicesLoader.class);
-            for (val loader : loaders) {
-                registerExposedServiceLoaderOf(loader.getExposedType(), loader);
-            }
+            val iterator = loaders.iterator();
+            while (iterator.hasNext())
+                try {
+                    val loader = iterator.next();
+                    registerExposedServiceLoaderOf(loader.getExposedType(), loader);
+                } catch (Exception cause) {
+                    logger.accept("Could not read one of the exposed classes of " + ExposedServicesLoader.class);
+                    if (useStrictMode)
+                        throw cause;
+                    else
+                        cause.printStackTrace();
+                }
             return exposed;
         }
 
@@ -135,11 +163,11 @@ public interface Injector {
             return Collections.emptyList();
         }
 
-        private class StdOutErrorPrinter implements Consumer<String> {
+        private static class StdErrorPrinter implements Consumer<String> {
 
             @Override
             public void accept(String s) {
-                System.out.println( s );
+                System.err.println( s );
             }
         }
     }

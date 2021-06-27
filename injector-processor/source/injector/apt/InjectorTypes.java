@@ -2,10 +2,7 @@ package injector.apt;
 
 import generator.apt.SimplifiedAST;
 import injector.*;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.Value;
-import lombok.val;
+import lombok.*;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -20,12 +17,15 @@ class InjectorTypes {
     Set<InjectorType> producers;
 }
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "uniqueIdentifier")
 class InjectorType extends SimplifiedAST.Type {
 
     List<SimplifiedAST.Method> fixedMethods;
     String exposedClass;
     List<String> exposedInterfaces;
+
+    @Getter
+    String uniqueIdentifier;
 
     public boolean isSingleton(){
         return !isNew();
@@ -67,9 +67,14 @@ class InjectorType extends SimplifiedAST.Type {
         return getAnnotation(annotationClass) != null;
     }
 
+    public void computeUniqueIdentifier() {
+        // TODO: UniqueIdentifier is empty at the moment, but it's here as a preparation for a future planed improvement
+        uniqueIdentifier = "";
+    }
+
     @Override
     public String toString() {
-        val ann = String.join( " ", getAnnotations().stream().map(i -> i.toString() ).collect(Collectors.toList() ) );
+        val ann = getAnnotations().stream().map(SimplifiedAST.Annotation::toString).collect(Collectors.joining(" "));
         return ann + ":" + super.toString();
     }
 }

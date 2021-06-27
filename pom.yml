@@ -7,7 +7,7 @@ parent:
 
 artifactId: injector-parent
 groupId: io.skullabs.injector
-version: "1.4.0"
+version: "1.5.0"
 packaging: pom
 
 properties:
@@ -28,3 +28,14 @@ build:
      version: 3.1.0
      configuration:
        source: "8"
+
+  pluginManagement:
+    plugins:
+      - groupId: org.sonatype.plugins
+        version: 1.6.3
+        artifactId: nexus-staging-maven-plugin
+        extensions: true
+        configuration:
+          serverId: ossrh
+          nexusUrl: https://oss.sonatype.org/
+          autoReleaseAfterClose: true

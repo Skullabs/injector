@@ -1,4 +1,4 @@
-package injector.apt.exposed;
+package injector.apt.example.calc;
 
 import java.util.function.BiFunction;
 

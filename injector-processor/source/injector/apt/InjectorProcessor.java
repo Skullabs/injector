@@ -4,6 +4,7 @@ import generator.apt.ClassGenerator;
 import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAbstractProcessor;
 import injector.*;
+import lombok.NonNull;
 import lombok.val;
 
 import javax.annotation.processing.FilerException;
@@ -62,7 +63,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             spiClasses.flush();
             loaderClasses.flush();
         } catch ( Exception cause ){
-            val msg = cause.getMessage() != null ? cause.getMessage() : "NullPointerException";
+            val msg = cause.getMessage() != null ? cause.getMessage() : "<null error msg>";
             error( msg );
             cause.printStackTrace();
         }
@@ -100,7 +101,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         }
 
         private void generateFactory(ClassGenerator generator, InjectorType factory ) throws IOException {
-            val className = factory.getCanonicalName() + "InjectorFactory";
+            val className = removeGenericsFromClassName(factory.getCanonicalName() + "InjectorFactory" + factory.getUniqueIdentifier());
             if (!factoryHasBeenProcessedBefore( className ) ) {
                 createSourceFile(generator, factory, className);
                 memorizeProcessedFactory(className);
@@ -119,12 +120,12 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             try {
                 val filer = processingEnv.getFiler();
                 val source = filer.createSourceFile(className);
-                info("Generating " + factory.getCanonicalName() + "InjectorFactory (singleton=" + factory.isSingleton() + ")");
+                info("Generating " + factory.getCanonicalName() + "InjectorFactory"+ factory.getUniqueIdentifier() +" (singleton=" + factory.isSingleton() + ")");
                 try (val writer = source.openWriter()) {
                     generator.write(writer, factory);
                 }
             } catch ( FilerException cause ) {
-                warn("Ignoring already created " + className);
+                handleFailureWhenCreatingFile(cause, className);
             }
         }
     }
@@ -147,7 +148,14 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
         }
 
         private void generateExposedClassFactory(InjectorType type, String exposedAs) throws IOException {
-            val className = exposedAs + "ExposedServicesLoader";
+            if (exposedAs.startsWith("java.")) {
+                warn("Prevented to generate exposed classes for " + exposedAs + ": " +
+                    "cannot generate classes within 'java' package.");
+                return;
+            }
+
+            exposedAs = removeGenericsFromClassName(exposedAs);
+            val className = exposedAs + "ExposedServicesLoader" + type.getUniqueIdentifier();
             val canonicalName = type.getCanonicalName();
 
             if ( !exposedClasses.containsKey( exposedAs ) ) {
@@ -169,8 +177,21 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
                     exposedServiceLoader.write(writer, type);
                 }
             } catch ( FilerException cause ) {
-                warn("Ignoring already created " + type.getCanonicalName() );
+                handleFailureWhenCreatingFile(cause, type.getCanonicalName());
             }
         }
+    }
+
+    void handleFailureWhenCreatingFile(FilerException cause, String fileName) throws FilerException {
+        if (!cause.getMessage().contains("recreate") && !cause.getMessage().contains("reopen") ){
+            throw cause;
+        }
+
+        warn("Ignoring already created " + fileName );
+    }
+
+    @NonNull
+    String removeGenericsFromClassName(@NonNull String className) {
+        return className.replaceAll("<[^>]+>", "");
     }
 }

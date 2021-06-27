@@ -1,4 +1,4 @@
-package injector.apt.exposed;
+package injector.apt.example.calc;
 
 import injector.*;
 
@@ -24,7 +24,7 @@ public class CalculatorInjectorFactory implements Factory<Calculator> {
         return new Calculator(
 
 
-context.instancesExposedAs( injector.apt.exposed.MathOperation.class )
+context.instancesExposedAs( injector.apt.example.calc.MathOperation.class )
         );
     }
 }

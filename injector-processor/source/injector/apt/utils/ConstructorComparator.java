@@ -1,8 +1,7 @@
 package injector.apt.utils;
 
-import generator.apt.SimplifiedAST;
 import generator.apt.SimplifiedAST.Method;
-import injector.Exposed;
+import injector.Constructor;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -17,8 +16,8 @@ public class ConstructorComparator {
 
     int compareByAnnotation(Method m1, Method m2){
         return Boolean.compare(
-            m2.getAnnotation(Exposed.class) != null,
-            m1.getAnnotation(Exposed.class) != null
+            m2.getAnnotation(Constructor.class) != null,
+            m1.getAnnotation(Constructor.class) != null
         );
     }
     

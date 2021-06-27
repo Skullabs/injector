@@ -1,10 +1,10 @@
-package injector.apt.exposed;
+package injector.apt.example.calc;
 
-import injector.ExposedAs;
+import injector.Exposed;
 import injector.Singleton;
 
 @Singleton
-@ExposedAs(MathOperation.class)
+@Exposed
 public class Sum implements MathOperation {
 
     @Override

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package injector.apt;
+package injector.apt.example;
 
-import injector.*;
+import injector.Mainloop;
+import injector.Singleton;
 
 @Singleton
 public class MainloopAnnotatedClass {

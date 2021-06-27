@@ -1,10 +1,14 @@
-package injector.apt.exposed;
+package injector.apt.example.calc;
 
-public class CalculatorNonManaged {
+import injector.AllOf;
+import injector.New;
+
+@New
+public class CalculatorNonSingleton {
 
     final Iterable<MathOperation> operations;
 
-    public CalculatorNonManaged( Iterable<MathOperation> operations ){
+    public CalculatorNonSingleton(@AllOf(MathOperation.class) Iterable<MathOperation> operations ){
         this.operations = operations;
     }
 
