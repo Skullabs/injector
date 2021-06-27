@@ -5,8 +5,6 @@ import injector.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
-import java.util.function.Supplier;
-
 @Singleton
 @RequiredArgsConstructor
 public class SupplierPrinter {
