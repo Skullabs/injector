@@ -19,6 +19,7 @@ package injector.apt;
 import injector.Job;
 import injector.apt.example.MainloopAnnotatedClass;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +40,11 @@ class MainloopMethodProcessorTest {
 
     InjectorProcessor injectorProcessor = new InjectorProcessor();
     MainloopMethodProcessor processor = new MainloopMethodProcessor();
+
+    @BeforeEach
+    void cleanUpPreviouslyGeneratedResources() {
+        APT.cleanUpPreviouslyGeneratedResources();
+    }
 
     @DisplayName("SHOULD generate class with default num of instances WHEN find a method properly annotated")
     @Test void generateClasses() throws IOException
