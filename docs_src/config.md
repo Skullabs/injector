@@ -18,51 +18,57 @@ for generating factories and metadata required to perform the dependence injecti
 All of them are available in Maven Central and you can import on your Gradle/Maven
 project as below described.
 
-```groovy tab="Gradle (Kotlin)"
-repositories {
-    mavenCentral()
-}
+=== "Gradle (Kotlin)"
 
-dependencies {
-    implementation(platform("io.skullabs.injector:injector-bom:1.4.0"))
-
-    implementation("io.skullabs.injector:injector-core")
-    compileOnly("io.skullabs.injector:injector-processor")
-}
-```
-
-```yaml tab="Maven (pom.kts)"
-dependencies {
-    compile("io.skullabs.injector:injector-core")
-    provided("io.skullabs.injector:injector-processor")
-}
-
-dependencyManagement {
-    dependencies {
-        import("io.skullabs.injector:injector-bom:1.4.0")
+    ```groovy
+    repositories {
+        mavenCentral()
     }
-}
-```
+    
+    dependencies {
+        implementation(platform("io.skullabs.injector:injector-bom:1.5.0"))
+    
+        implementation("io.skullabs.injector:injector-core")
+        compileOnly("io.skullabs.injector:injector-processor")
+    }
+    ```
 
-```xml tab="Maven (pom.xml)"
-<dependencies>
-    <dependency>
-        <groupId>io.skullabs.injector</groupId>
-        <artifactId>injector-core</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.skullabs.injector</groupId>
-        <artifactId>injector-processor</artifactId>
-    </dependency>
-</dependencies>
+=== "Maven (pom.kts)"
 
-<dependencyManagement>
-    <dependency>
-        <groupId>io.skullabs.injector</groupId>
-        <artifactId>injector-bom</artifactId>
-        <version>1.4.0</version>
-        <scope>import</scope>
-        <type>pom</type>
-    </dependency>
-</dependencyManagement>
-```
+    ```kotlin
+    dependencies {
+        compile("io.skullabs.injector:injector-core")
+        provided("io.skullabs.injector:injector-processor")
+    }
+    
+    dependencyManagement {
+        dependencies {
+            import("io.skullabs.injector:injector-bom:1.5.0")
+        }
+    }
+    ```
+
+=== "Maven (pom.xml)"
+    
+    ```xml
+    <dependencies>
+        <dependency>
+            <groupId>io.skullabs.injector</groupId>
+            <artifactId>injector-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.skullabs.injector</groupId>
+            <artifactId>injector-processor</artifactId>
+        </dependency>
+    </dependencies>
+    
+    <dependencyManagement>
+        <dependency>
+            <groupId>io.skullabs.injector</groupId>
+            <artifactId>injector-bom</artifactId>
+            <version>1.5.0</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencyManagement>
+    ```

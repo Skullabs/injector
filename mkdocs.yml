@@ -20,7 +20,7 @@ extra_css:
 repo_name: 'skullabs/injector'
 repo_url: 'https://github.com/Skullabs/injector'
 
-copyright: 'Copyright &copy; 2018 - 2019 Skullabs Contributors'
+copyright: 'Copyright &copy; 2018 - 2021 Skullabs Contributors'
 
 # Plugins
 plugins:
@@ -30,8 +30,10 @@ plugins:
 # Extensions
 markdown_extensions:
   - admonition
-  - codehilite:
-      guess_lang: false
+#  - codehilite:
+#      guess_lang: false
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
   - pymdownx.superfences
-  - toc:
-      permalink: true
+#  - toc:
+#      permalink: true

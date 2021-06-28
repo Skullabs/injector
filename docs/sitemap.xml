@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://skullabs.github.io/injector/</loc>
-     <lastmod>2020-05-12</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/injector/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/injector/basics/</loc>
-     <lastmod>2020-05-12</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/injector/basics/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://skullabs.github.io/injector/config/</loc>
-     <lastmod>2020-05-12</lastmod>
-     <changefreq>daily</changefreq>
+         <loc>https://skullabs.github.io/injector/config/</loc>
+         <lastmod>2021-06-28</lastmod>
+         <changefreq>daily</changefreq>
     </url>
 </urlset>

@@ -18,86 +18,89 @@ it requires to perform its tasks at compilation time, providing a zero-overhead 
 for your projects.
 
 ## Dependency injection in action
-```kotlin tab="Kotlin"
-import injector.*;
-
-data class User(
-    val id: UUID = UUID.randomUUID()
-    val name: String,
-    val isPayingUser: Boolean
-)
-
-@Singleton class UserPersistence {
-    private val users = mutableMapOf<UUID, User>()
-
-    fun save( user: User ) {
-        users.put( user.id, user );
+=== "Kotlin"
+    ```kotlin 
+    import injector.*;
+    
+    data class User(
+        val id: UUID = UUID.randomUUID()
+        val name: String,
+        val isPayingUser: Boolean
+    )
+    
+    @Singleton class UserPersistence {
+        private val users = mutableMapOf<UUID, User>()
+    
+        fun save( user: User ) {
+            users.put( user.id, user );
+        }
+    
+        fun loadAll(): Map<UUID, User> = users
     }
-
-    fun loadAll(): Map<UUID, User> = users
-}
-
-@Singleton class UserService( val persistence: UserPersistence ) {
-
-    fun save( user: User ){
-        if (user.isPayingUser)
-            persistence.save( user )
+    
+    @Singleton class UserService( val persistence: UserPersistence ) {
+    
+        fun save( user: User ){
+            if (user.isPayingUser)
+                persistence.save( user )
+        }
     }
-}
-
-fun main() {
-    val service = Injector.create().instanceOf( UserService.class )
-    val user = User("joe@dinner.com", true)
-    service.save( user )
-}
-```
-
-```kotlin tab="Java"
-import injector.*;
-import java.util.*;
-
-class User {
-    final UUID id = UUID.randomUUID();
-    final String name;
-    final Boolean isPayingUser;
-
-    User( String name, Boolean isPayingUser ){
-        this.name = name;
-        this.isPayingUser = isPayingUser;
+    
+    fun main() {
+        val service = Injector.create().instanceOf( UserService.class )
+        val user = User("joe@dinner.com", true)
+        service.save( user )
     }
-}
+    ```
 
-@Singleton
-class UserPersistence {
-    private final Map<UUID,User> users = new HashMap<>();
-
-    void save( User user ) {
-        users.put( user.id, user );
+=== "Java"
+    ```java
+    import injector.*;
+    import java.util.*;
+    
+    class User {
+        final UUID id = UUID.randomUUID();
+        final String name;
+        final Boolean isPayingUser;
+    
+        User( String name, Boolean isPayingUser ){
+            this.name = name;
+            this.isPayingUser = isPayingUser;
+        }
     }
-}
-
-@Singleton
-class UserService {
-
-    final UserPersistence persistence;
-
-    UserService( UserPersistence persistence ){
-        this.persistence = persistence;
+    
+    @Singleton
+    class UserPersistence {
+        private final Map<UUID,User> users = new HashMap<>();
+    
+        void save( User user ) {
+            users.put( user.id, user );
+        }
     }
-
-    void save( User user ){
-        if (user.isPayingUser)
-            persistence.save( user );
+    
+    @Singleton
+    class UserService {
+    
+        final UserPersistence persistence;
+    
+        UserService( UserPersistence persistence ){
+            this.persistence = persistence;
+        }
+    
+        void save( User user ){
+            if (user.isPayingUser)
+                persistence.save( user );
+        }
     }
-}
-
-fun main() {
-    UserService service = Injector.create().instanceOf(UserService.class);
-    User user = new User("joe@dinner.com", true);
-    service.save( user );
-}
-```
-
+    
+    class Main {
+        public static void main(String[] args) {
+            UserService service = Injector.create().instanceOf(UserService.class);
+            User user = new User("joe@dinner.com", true);
+            service.save( user );
+        }
+    }
+    ```
 
 ## License
-Kos is release under Apache License 2 terms.
+Injector is release under Apache License 2 terms.
