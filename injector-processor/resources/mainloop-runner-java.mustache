@@ -50,8 +50,9 @@ public class {{className}} implements Job {
                     try {
                         while( JOB_MAY_RUN ){
                             instance.{{method}}();
-                            LockSupport.parkNanos(2L);
+                            Thread.sleep({{intervalWaitTime}}L);
                         }
+                    } catch( final InterruptedException cause ) {
                     } catch( final Throwable cause ) {
                         System.err.println(
                             "Failed to execute {{simpleName}}.{{method}} in background. Aborted." );

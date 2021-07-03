@@ -20,4 +20,14 @@ public @interface Mainloop {
      * The maximum amount of time (seconds) that should be wait for tasks being finished.
      */
     int gracefulShutdownTime() default 120;
+
+    /**
+     * Interval (in milliseconds) between subsequent executions.
+     *
+     * It is worth noticing that setting interval to 0L might lead to a
+     * significant increase of CPU consumption.
+     *
+     * It defaults to 1 millisecond.
+     */
+    long intervalWaitTime() default 1L;
 }

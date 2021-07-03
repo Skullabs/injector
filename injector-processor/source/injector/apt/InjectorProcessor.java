@@ -194,4 +194,10 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
     String removeGenericsFromClassName(@NonNull String className) {
         return className.replaceAll("<[^>]+>", "");
     }
+
+    @Override
+    protected void info(String msg) {
+        if (System.getenv("INJECTOR_VERBOSE") != null)
+            super.info(msg);
+    }
 }
