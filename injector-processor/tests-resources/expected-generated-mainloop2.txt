@@ -50,8 +50,9 @@ public class MainloopAnnotatedClassMainloopRunner1 implements Job {
                     try {
                         while( JOB_MAY_RUN ){
                             instance.execute2();
-                            LockSupport.parkNanos(2L);
+                            Thread.sleep(1L);
                         }
+                    } catch( final InterruptedException cause ) {
                     } catch( final Throwable cause ) {
                         System.err.println(
                             "Failed to execute MainloopAnnotatedClass.execute2 in background. Aborted." );

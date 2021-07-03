@@ -38,6 +38,7 @@ class MainloopClass {
     final String method;
     final int numberOfInstances;
     final int gracefulShutdownTime;
+    final long intervalWaitTime;
 
     static Iterable<MainloopClass> from( SimplifiedAST.Type type ) {
         val counter = new AtomicInteger(0);
@@ -50,7 +51,8 @@ class MainloopClass {
                 type.getSimpleName() + "MainloopRunner" + (counter.getAndIncrement()),
                 method.getName(),
                 method.numberOfInstances(),
-                method.gracefulShutdownTime()
+                method.gracefulShutdownTime(),
+                method.intervalWaitTime()
             )
         );
     }
@@ -88,6 +90,12 @@ class MainloopMethod {
         val ann = annotation.get();
         val value = ann.getParameters().getOrDefault("gracefulShutdownTime", "120").toString();
         return Integer.parseInt( value );
+    }
+
+    long intervalWaitTime() {
+        val ann = annotation.get();
+        val value = ann.getParameters().getOrDefault("intervalWaitTime", "1").toString();
+        return Long.parseLong( value );
     }
 
     static MainloopMethod from(SimplifiedAST.Method method) {
