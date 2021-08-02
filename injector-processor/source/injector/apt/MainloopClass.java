@@ -77,25 +77,28 @@ class MainloopClass {
 
 @Value
 class MainloopMethod {
-    final String name;
-    final Optional<SimplifiedAST.Annotation> annotation;
+    String name;
+    Optional<SimplifiedAST.Annotation> annotation;
 
     int numberOfInstances(){
         val ann = annotation.get();
         val value = ann.getParameters().getOrDefault("instances", "1").toString();
-        return Integer.parseInt( value );
+        val parsedValue = value.replaceAll("[^0-9]+", "");
+        return Integer.parseInt( parsedValue );
     }
 
     int gracefulShutdownTime(){
         val ann = annotation.get();
         val value = ann.getParameters().getOrDefault("gracefulShutdownTime", "120").toString();
-        return Integer.parseInt( value );
+        val parsedValue = value.replaceAll("[^0-9]+", "");
+        return Integer.parseInt( parsedValue );
     }
 
     long intervalWaitTime() {
         val ann = annotation.get();
         val value = ann.getParameters().getOrDefault("intervalWaitTime", "1").toString();
-        return Long.parseLong( value );
+        val parsedValue = value.replaceAll("[^0-9]+", "");
+        return Long.parseLong( parsedValue );
     }
 
     static MainloopMethod from(SimplifiedAST.Method method) {
