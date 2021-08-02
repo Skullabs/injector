@@ -187,7 +187,7 @@ public class InjectorProcessor extends SimplifiedAbstractProcessor {
             throw cause;
         }
 
-        warn("Ignoring already created " + fileName );
+        info("Ignoring already created " + fileName );
     }
 
     @NonNull
