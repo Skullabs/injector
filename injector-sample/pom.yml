@@ -11,7 +11,7 @@ version: "1.5.2"
 packaging: jar
 
 properties:
-  version.lombok: "1.18.6"
+  version.lombok: "1.18.24"
 
 dependencies:
  - { groupId: io.skullabs.injector, artifactId: injector-core, version: "1.5.2" }
