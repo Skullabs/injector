@@ -14,6 +14,7 @@ properties:
   version.lombok: "1.18.24"
   version.compile-testing: "0.18"
   version.class-generator: "0.4.1"
+  version.nexus-staging.plugin: "1.6.13"
 
 modules:
  - "injector-core"
@@ -32,7 +33,7 @@ build:
   pluginManagement:
     plugins:
       - groupId: org.sonatype.plugins
-        version: 1.6.3
+        version: 1.6.13
         artifactId: nexus-staging-maven-plugin
         extensions: true
         configuration:

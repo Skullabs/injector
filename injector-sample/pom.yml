@@ -12,6 +12,7 @@ packaging: jar
 
 properties:
   version.lombok: "1.18.24"
+  version.nexus-staging.plugin: "1.6.13"
 
 dependencies:
  - { groupId: io.skullabs.injector, artifactId: injector-core, version: "1.5.3" }
